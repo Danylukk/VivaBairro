@@ -328,11 +328,11 @@ A tabela a seguir correlaciona os critérios oficiais do barema da Global Soluti
 
 | Critério da Avaliação | Pontos Máx. | Situação Técnica em Código | Ações Restantes do Aluno para Nota Máxima |
 |---|:---:|---|---|
-| **1. Fluxo CitizenTech e Integração com IA** | 2,0 | **Aprovado em código:** Pipeline completo funcional, validação Pydantic estrita, tratamento de code fences, resiliência a Prompt Injection e fallback determinístico auditado. | Inserir chave OpenAI pessoal no `.env` e registrar 3 saídas de inferência real em `docs/casos_teste_ia.md`. |
+| **1. Fluxo CitizenTech e Integração com IA** | 2,0 | **Aprovado em código:** Pipeline completo funcional, validação Pydantic estrita, tratamento de code fences, resiliência a Prompt Injection e fallback determinístico auditado. | **Concluído em 09/11/2026:** três saídas reais de `gpt-4o-mini` documentadas no [relatório de validação do LLM](docs/relatorio_validacao_llm_real_20261109.md). |
 | **2. Arquitetura e Estrutura de Código** | 2,0 | **Aprovado em código:** Separação estrita em camadas (`features/`, `ui/`, `state/`, `providers/` no front; `routers/`, `schemas/`, `pipelines/`, `providers/` no back). Componentes reutilizados e sem chamadas diretas de IA no front. | Nenhuma pendência em código. |
 | **3. Estado, Performance e Robustez** | 1,5 | **Aprovado em código:** Gerenciamento de `st.session_state` estável contra reruns, 45 testes automatizados aprovados no Pytest, CORS restritivo e sem cache compartilhado de dados de munícipes. | Nenhuma pendência em código. |
 | **4. UX/UI, Acessibilidade e Visualização** | 2,0 | **Aprovado em código:** Diretrizes WCAG 2.2 AA (tríade semântica, contraste alto, foco por teclado), ícones Material Symbols intactos, sem transbordamento horizontal (390px validado) e 3 filtros combináveis em gráficos Plotly. | Nenhuma pendência em código. |
-| **5. Deploy e Repositório** | 1,0 | **Estruturado:** Multi-container `docker-compose.yml`, Dockerfiles otimizados, `.env.example` e `.gitignore` blindados contra chaves. | Executar `docker compose up --build` em máquina com Docker ativo e fazer push da branch para repositório público no GitHub. |
+| **5. Deploy e Repositório** | 1,0 | **Estruturado:** Multi-container `docker-compose.yml`, Dockerfiles otimizados, `.env.example` e `.gitignore` blindados contra chaves. | Docker executado e testado anteriormente no ambiente WSL2; **a publicação em repositório público GitHub continua pendente**. |
 | **6. Justificativa, Validação e Impacto Social** | 1,5 | **Estruturado:** Fundamentação em dados do SP156, metas ODS 11.7 e 16.6, abas de transparência ética e roteiros padronizados de teste preparados. | Conduzir entrevistas com 3 participantes reais conforme `docs/validacao_usuarios.md` e gravar o vídeo de 4m30s seguindo `docs/roteiro_video.md`. |
 
 ---
@@ -351,7 +351,7 @@ Para conferir a configuração de IA **sem consumo de API**:
 python -m scripts.validar_llm_real
 ```
 
-Depois de configurar `.env` local com `LLM_PROVIDER=openai` e a chave privada, revisar custos e autorizar conscientemente **três chamadas reais**:
+Para futuras reproduções, o comando abaixo **gera três chamadas potencialmente cobradas**. **Não o reexecute sem nova autorização**, pois os testes reais desta entrega já foram realizados:
 
 ```bash
 python -m scripts.validar_llm_real --executar
@@ -359,4 +359,4 @@ python -m scripts.validar_llm_real --executar
 
 A ferramenta gera `docs/evidencias/llm_real_*.json` com os três casos fictícios e as respostas efetivas, se a API funcionar. **Esses arquivos só podem ser chamados de evidência de LLM real quando `modo_retornado=llm` e a execução for bem-sucedida.** A revisão da qualidade e os ajustes permanecem humanos. A chave nunca é gravada pelo script. O modo demo não atende sozinho ao requisito de LLM real.
 
-**Pendências:** chave ainda não configurada nesta cópia; três participantes reais ainda sem validação concluída; publicação pública e vídeo ainda não realizados. Não declarar nota máxima antecipadamente.
+**Atualização 09/11/2026:** chave local configurada com segurança e **três chamadas reais ao LLM concluídas**, documentadas no [relatório da IA](docs/relatorio_validacao_llm_real_20261109.md). Ainda faltam validação com três participantes reais, melhoria baseada no feedback, GitHub público e vídeo. Não declarar nota máxima antecipadamente.

@@ -25,7 +25,7 @@ Os três integrantes devem conhecer o funcionamento do sistema e contribuir com 
 7. Leia as respostas, compare esperado/obtido e registre eventuais ajustes reais em `docs/casos_teste_ia.md`. Pydantic válido não garante resposta correta.
 8. Antes de qualquer publicação, revise o JSON de evidências.
 
-**Situação atual:** execução real não realizada por ausência da chave no ambiente do projeto.
+**Situação atual (atualizada 09/11/2026):** três inferências reais concluídas com o modelo configurado `gpt-4o-mini`. Consulte [relatório e resultados](relatorio_validacao_llm_real_20261109.md). Não repita chamadas pagas sem nova autorização.
 
 ## 2. Realizar testes com três participantes reais
 
@@ -72,7 +72,7 @@ Os três integrantes devem conhecer o funcionamento do sistema e contribuir com 
 
 ## 6. Critérios para fechamento
 
-- [ ] Três casos de LLM real executados e avaliados
+- [x] Três casos de LLM real executados e avaliados (09/11/2026)
 - [ ] Três participantes reais testaram o sistema
 - [ ] Uma melhoria comprovada após feedback humano
 - [ ] Testes automatizados executados após a melhoria
