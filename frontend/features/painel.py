@@ -32,13 +32,13 @@ def renderizar() -> None:
     qtd_reais = len(registros) - qtd_simulados
     if qtd_simulados > 0 and qtd_reais == 0:
         st.warning(
-            f"🧪 **Atenção (Modo Demonstração):** O painel exibe {qtd_simulados} registro(s) gerado(s) por regras locais simuladas ou exemplos fictícios. "
-            "Nenhuma chamada a LLM externo foi realizada para estes registros.",
+            f"🧪 **Atenção (Modo Demonstração):** O painel exibe {qtd_simulados} registro(s) gerado(s) por regras locais de teste ou exemplos ilustrativos. "
+            "Esses dados servem para demonstrar o funcionamento dos gráficos e filtros.",
             icon="⚠️"
         )
     elif qtd_simulados > 0 and qtd_reais > 0:
         st.info(
-            f"📊 O painel contém **{qtd_reais} relato(s) analisado(s) por IA real** e **{qtd_simulados} exemplo(s) simulado(s)/fictício(s)**. "
+            f"📊 O painel contém **{qtd_reais} relato(s) com análise de IA** e **{qtd_simulados} exemplo(s) ilustrativo(s)**. "
             "Use o filtro 'Tipo de Relato' para isolá-los.",
             icon="ℹ️"
         )
@@ -118,35 +118,15 @@ def renderizar() -> None:
             st.plotly_chart(fig_cat, use_container_width=True, config={"displaylogo": False, "scrollZoom": True})
             st.caption("🔍 **Interatividade:** Gráfico horizontal por tipo de problema urbano com suporte a zoom e hover.")
         else:
-            st.info("Nenhum registro corresponde aos filtros selecionados.")
+            st.info("Nenhum registro corresponde aos filtros selecionados. Tente ajustar os filtros acima.")
 
     with aba_tabela:
         if filtrados:
-            colunas_exibir = ["id", "quando", "bairro", "categoria", "prioridade", "resumo", "revisao", "avaliacao_ia", "origem"]
-            df = pd.DataFrame(filtrados)
-            # Garantir colunas presentes mesmo para exemplos ficticios antigos
-            for col in colunas_exibir:
-                if col not in df.columns:
-                    df[col] = "—"
-            
-            tabela = df[colunas_exibir].copy()
-            tabela.columns = [
-                "Código Local", "Data/Hora", "Bairro", "Categoria",
-                "Prioridade", "Resumo", "Revisão Humana", "Avaliação da IA", "Origem do Dado"
-            ]
-            st.dataframe(tabela, use_container_width=True, hide_index=True)
-            st.caption(f"Exibindo {len(filtrados)} registro(s) filtrado(s).")
+            df = pd.DataFrame(filtrados)[["id", "quando", "bairro", "categoria", "prioridade", "resumo", "revisao", "origem"]]
+            df.columns = ["Código Local", "Data/Hora", "Bairro", "Categoria", "Prioridade", "Resumo", "Revisão Humana", "Origem"]
+            st.dataframe(df, use_container_width=True, hide_index=True)
+            st.caption("🔒 Dados armazenados temporariamente na memória da sessão atual.")
         else:
-            st.info("Não há dados a listar com os filtros atuais.")
-
-    st.divider()
-    col_l1, col_l2 = st.columns([1, 3])
-    with col_l1:
-        if st.button("🗑️ Limpar histórico da sessão", use_container_width=True):
-            st.session_state["registros"] = []
-            st.session_state["ultimo_registro"] = None
-            st.rerun()
-    with col_l2:
-        st.caption("Esta ação limpa a memória local da sessão atual. Nenhum registro remoto ou permanente é afetado.")
+            st.info("Nenhum registro a exibir com os filtros atuais.")
 
     aviso_institucional()

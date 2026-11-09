@@ -269,22 +269,22 @@ python -m pytest -v
 
 ---
 
-## 8. Testes End-to-End (E2E) e Evidências Visuais
+## 8. Testes End-to-End (E2E) e Evidências Visuais (Comparativo Antes / Depois)
 
-Para comprovação irrefutável do funcionamento e da qualidade de experiência do usuário (UX/UI), foi implementado o script automatizado de navegador `scripts/run_e2e_evidence.py` utilizando Playwright. O script executou o fluxo completo de um cidadão ponta a ponta em múltiplos dispositivos.
+Para comprovação irrefutável do funcionamento e da qualidade de experiência do usuário (UX/UI), foi implementado o script automatizado de navegador [`scripts/run_e2e_evidence.py`](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/scripts/run_e2e_evidence.py) utilizando Playwright. O script executou o fluxo completo de um cidadão ponta a ponta em múltiplos dispositivos, validando ausência de overflow e eliminação de caracteres indevidos.
 
-### Galeria de Evidências Reais:
-As imagens em resolução nativa encontram-se salvas no diretório `docs/evidencias/`:
+### Galeria de Evidências Reais (Depois das Correções vs. Estado Anterior):
+As capturas em resolução nativa encontram-se salvas em `docs/evidencias/` (versão corrigida) e `docs/evidencias/antes/` (versão prévia da auditoria):
 
-| Evidência | Resolução / Dispositivo | Descrição do Fluxo Comprovado |
-|---|:---:|---|
-| [01_desktop_formulario_inicial.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/01_desktop_formulario_inicial.png) | 1440 × 900 (Desktop) | **Etapa 1:** Formulário inicial com validação de campos obrigatórios, barra de progresso em 3 etapas, orientações explícitas de privacidade (LGPD) e dicas de redação cidadã. |
-| [02_desktop_revisao_human_in_the_loop.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/02_desktop_revisao_human_in_the_loop.png) | 1440 × 900 (Desktop) | **Etapa 2 (Human-in-the-Loop):** Análise gerada pela IA exibida com faixa de prioridade semântica. Formulário de revisão ativa permitindo alteração de categoria, prioridade e resumo, além de coleta de satisfação sobre a IA antes do registro. |
-| [03_desktop_recibo_confirmacao.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/03_desktop_recibo_confirmacao.png) | 1440 × 900 (Desktop) | **Etapa 3:** Recibo de confirmação consciente exibindo código local (`LOCAL-XXXXXXXX`), badge de intervenção humana registrada, aviso institucional de não envio oficial e botão para visualização no painel. |
-| [04_desktop_painel_plotly.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/04_desktop_painel_plotly.png) | 1440 × 900 (Desktop) | **Painel Interativo:** Cards de indicadores com `card_metrica()`, 3 controles interativos de filtragem (Categoria, Prioridade, Origem), abas de visualização, gráfico Plotly com hover/zoom e tabela completa de auditoria. |
-| [05_desktop_como_funciona_ods_etica.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/05_desktop_como_funciona_ods_etica.png) | 1440 × 900 (Desktop) | **Transparência e Governança:** Tela "Como Funciona" estruturada em abas: Jornada Cidadã, Metas ODS 11 e 16, Riscos e Mitigações Éticas (Alucinação, Viés, Injeção) e Canais Oficiais do SP156. |
-| [06_tablet_formulario.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/06_tablet_formulario.png) | 768 × 1024 (Tablet) | **Responsividade Intermediária:** Adaptação fluida dos blocos visuais, mantendo legibilidade, hierarquia tipográfica e botões com alvos de toque adequados. |
-| [07_mobile_responsivo.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/07_mobile_responsivo.png) | 390 × 844 (Mobile) | **Responsividade Mobile-First:** Barra lateral recolhida automaticamente (`initial_sidebar_state="auto"`), formulário em coluna única, botões e campos otimizados para toque em telas estreitas. |
+| # | Evidência Corrigida (Depois) | Evidência Prévia (Antes) | Dispositivo / Viewport | Descrição das Melhorias Comprovadas |
+|---|---|---|:---:|---|
+| 1 | [01_desktop_formulario_inicial.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/01_desktop_formulario_inicial.png) | [antes/01_desktop...](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/antes/01_desktop_formulario_inicial.png) | 1440 × 900 (Desktop) | **Etapa 1:** Remoção de instruções técnicas (`.env`, `LLM_PROVIDER`); linguagem acolhedora para o munícipe; preservação das fontes de ícones. |
+| 2 | [02_desktop_revisao_human_in_the_loop.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/02_desktop_revisao_human_in_the_loop.png) | [antes/02_desktop...](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/antes/02_desktop_revisao_human_in_the_loop.png) | 1440 × 900 (Desktop) | **Etapa 2 (Human-in-the-Loop):** Eliminação de `keyboard_arrow_right` como texto; chevron do expander sem sobreposição; botões secundários neutros (não vermelhos). |
+| 3 | [03_desktop_recibo_confirmacao.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/03_desktop_recibo_confirmacao.png) | [antes/03_desktop...](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/antes/03_desktop_recibo_confirmacao.png) | 1440 × 900 (Desktop) | **Etapa 3:** Recibo consciente com código local `LOCAL-XXXXXXXX`, aviso institucional explícito e botão de visualização no painel. |
+| 4 | [04_desktop_painel_plotly.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/04_desktop_painel_plotly.png) | [antes/04_desktop...](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/antes/04_desktop_painel_plotly.png) | 1440 × 900 (Desktop) | **Painel Interativo:** 3 filtros combinados (Categoria, Prioridade, Origem); aviso claro sobre dados de teste; múltiplos gráficos Plotly interativos. |
+| 5 | [05_desktop_como_funciona_ods_etica.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/05_desktop_como_funciona_ods_etica.png) | [antes/05_desktop...](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/antes/05_desktop_como_funciona_ods_etica.png) | 1440 × 900 (Desktop) | **Transparência e Governança:** Abas estruturadas de Jornada Cidadã, Metas ODS 11/16, Ética/Limites e decisões de arquitetura. |
+| 6 | [06_tablet_formulario.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/06_tablet_formulario.png) | [antes/06_tablet...](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/antes/06_tablet_formulario.png) | 768 × 1024 (Tablet) | **Responsividade Intermediária:** Espaçamentos confortáveis, diagramação fluida e sem corte de textos. |
+| 7 | [07_mobile_responsivo.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/07_mobile_responsivo.png) | [antes/07_mobile...](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/antes/07_mobile_responsivo.png) | 390 × 844 (Mobile) | **Responsividade Mobile:** Ícone de menu sem texto `keyboard_double_arrow_right`; **zero overflow horizontal** (`scrollWidth == clientWidth`); sidebar recolhida automaticamente. |
 
 ---
 
@@ -322,17 +322,18 @@ A documentação do projeto inclui protocolos prontos para aplicação de testes
 
 ---
 
-## 12. Checklist de Conformidade com a Rubrica da Global Solution 2026.2
+## 12. Matriz de Conformidade com a Rubrica da Avaliação
 
-| Critério da Avaliação | Pontos | Situação Implementada |
-|---|:---:|---|
-| **1. Fluxo CitizenTech e Integração com IA** | 2,0 | **Completo:** Pipeline ponta a ponta funcional, validação Pydantic de entrada e saída, provedor real com fallback demo auditado, prompt seguro e human-in-the-loop obrigatório. |
-| **2. Arquitetura e Estrutura de Código** | 2,0 | **Completo:** Desacoplamento total entre front (`features/`, `ui/`, `state/`, `providers/`) e back (`routers/`, `schemas/`, `pipelines/`, `providers/`), sem chamadas diretas de IA no front e com componentes reutilizáveis. |
-| **3. Estado, Performance e Robustez** | 1,5 | **Completo:** `st.session_state` estável contra reruns, 45 testes automatizados com Pytest, proteção contra stack traces, CORS restritivo e isolamento de chaves. |
-| **4. UX/UI, Acessibilidade e Visualização** | 2,0 | **Completo:** Diretrizes WCAG 2.2 AA (tríade semântica, foco por teclado, contraste alto), responsividade validada em 3 viewports (Playwright) e gráficos Plotly com 3 filtros combináveis. |
-| **5. Deploy e Repositório** | 1,0 | **Completo:** Multi-container `docker-compose.yml` funcional, `.env.example`, `.gitignore` blindado contra chaves e documentação de execução local/docker. |
-| **6. Justificativa, Validação e Impacto Social** | 1,5 | **Completo:** Fundamentação em dados do SP156, ODS 11.7 e 16.6, abas de transparência ética e protocolos padronizados de validação com usuários e testes de IA. |
-| **Nota Total da Rubrica** | **10,0** | **Evidenciado em código, testes automatizados e capturas de tela reais.** |
+A tabela a seguir correlaciona os critérios oficiais do barema da Global Solution 2026.2 com o que foi efetivamente construído e comprovado em código vs. o que requer execução pessoal do estudante antes do envio final:
+
+| Critério da Avaliação | Pontos Máx. | Situação Técnica em Código | Ações Restantes do Aluno para Nota Máxima |
+|---|:---:|---|---|
+| **1. Fluxo CitizenTech e Integração com IA** | 2,0 | **Aprovado em código:** Pipeline completo funcional, validação Pydantic estrita, tratamento de code fences, resiliência a Prompt Injection e fallback determinístico auditado. | Inserir chave OpenAI pessoal no `.env` e registrar 3 saídas de inferência real em `docs/casos_teste_ia.md`. |
+| **2. Arquitetura e Estrutura de Código** | 2,0 | **Aprovado em código:** Separação estrita em camadas (`features/`, `ui/`, `state/`, `providers/` no front; `routers/`, `schemas/`, `pipelines/`, `providers/` no back). Componentes reutilizados e sem chamadas diretas de IA no front. | Nenhuma pendência em código. |
+| **3. Estado, Performance e Robustez** | 1,5 | **Aprovado em código:** Gerenciamento de `st.session_state` estável contra reruns, 45 testes automatizados aprovados no Pytest, CORS restritivo e sem cache compartilhado de dados de munícipes. | Nenhuma pendência em código. |
+| **4. UX/UI, Acessibilidade e Visualização** | 2,0 | **Aprovado em código:** Diretrizes WCAG 2.2 AA (tríade semântica, contraste alto, foco por teclado), ícones Material Symbols intactos, sem transbordamento horizontal (390px validado) e 3 filtros combináveis em gráficos Plotly. | Nenhuma pendência em código. |
+| **5. Deploy e Repositório** | 1,0 | **Estruturado:** Multi-container `docker-compose.yml`, Dockerfiles otimizados, `.env.example` e `.gitignore` blindados contra chaves. | Executar `docker compose up --build` em máquina com Docker ativo e fazer push da branch para repositório público no GitHub. |
+| **6. Justificativa, Validação e Impacto Social** | 1,5 | **Estruturado:** Fundamentação em dados do SP156, metas ODS 11.7 e 16.6, abas de transparência ética e roteiros padronizados de teste preparados. | Conduzir entrevistas com 3 participantes reais conforme `docs/validacao_usuarios.md` e gravar o vídeo de 4m30s seguindo `docs/roteiro_video.md`. |
 
 ---
 *Projeto acadêmico desenvolvido para a Global Solution 2026.2 — FIAP.*

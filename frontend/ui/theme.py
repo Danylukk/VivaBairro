@@ -1,5 +1,6 @@
 """Tema visual da prova de conceito VivaBairro.
-Projetado segundo diretrizes WCAG 2.2 AA (contraste >= 4.5:1, foco visível e responsividade).
+Projetado segundo diretrizes WCAG 2.2 AA (contraste >= 4.5:1, foco visível,
+ícones Material Symbols preservados e responsividade para 390px, 768px e 1440px).
 """
 import streamlit as st
 
@@ -15,15 +16,37 @@ def aplicar_tema() -> None:
         --viva-border: #e2e8f0;
     }
     
+    html, body, .stApp {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #0f172a;
+        overflow-x: hidden !important;
+    }
+    
     .block-container {
         max-width: 1160px;
         padding-top: 1.5rem;
         padding-bottom: 3rem;
+        overflow-x: hidden !important;
+        box-sizing: border-box;
     }
     
-    html, body, [class*="st-"] {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        color: #0f172a;
+    /* Preservação estrita dos ícones do Streamlit (Material Symbols) */
+    [data-testid="stIconMaterial"],
+    [data-testid*="stIcon"],
+    .material-symbols-rounded,
+    [class*="material-symbols"] {
+        font-family: "Material Symbols Rounded", "Material Icons", sans-serif !important;
+        font-weight: normal !important;
+        font-style: normal !important;
+        font-size: 1.35rem !important;
+        line-height: 1 !important;
+        letter-spacing: normal !important;
+        text-transform: none !important;
+        display: inline-block !important;
+        white-space: nowrap !important;
+        word-wrap: normal !important;
+        direction: ltr !important;
+        -webkit-font-smoothing: antialiased !important;
     }
     
     h1, h2, h3 {
@@ -75,7 +98,7 @@ def aplicar_tema() -> None:
         border-right: 1px solid #e2e8f0;
     }
     
-    /* Botões primários com alto contraste e semântica de acessibilidade */
+    /* Botões primários com alto contraste (Verde Petróleo WCAG AA, ratio > 4.5:1) */
     div.stButton>button[kind="primary"], div.stFormSubmitButton>button[kind="primary"] {
         background-color: #0f766e !important;
         color: #ffffff !important;
@@ -91,18 +114,67 @@ def aplicar_tema() -> None:
         color: #ffffff !important;
     }
     
-    /* Ajustes para telas menores (mobile / tablet) */
-    @media (max-width: 640px) {
+    /* Botões secundários e de descarte: neutros, nunca vermelhos alarmantes */
+    div.stButton>button[kind="secondary"], div.stButton>button:not([kind="primary"]) {
+        background-color: #f8fafc !important;
+        color: #334155 !important;
+        border: 1px solid #cbd5e1 !important;
+        font-weight: 500 !important;
+        border-radius: 8px !important;
+        min-height: 44px !important;
+    }
+    
+    div.stButton>button[kind="secondary"]:hover, div.stButton>button:not([kind="primary"]):hover {
+        background-color: #f1f5f9 !important;
+        border-color: #94a3b8 !important;
+        color: #0f172a !important;
+    }
+    
+    /* Expander sem sobreposição de texto ou caracteres indevidos */
+    [data-testid="stExpander"] {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        background-color: #ffffff !important;
+        margin-top: 0.75rem !important;
+        margin-bottom: 1rem !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+        overflow: hidden !important;
+    }
+    
+    [data-testid="stExpander"] summary {
+        padding: 0.75rem 1rem !important;
+        font-weight: 600 !important;
+        color: #1e293b !important;
+        cursor: pointer !important;
+    }
+
+    [data-testid="stExpander"] summary:hover {
+        background-color: #f8fafc !important;
+        color: #0f766e !important;
+    }
+    
+    [data-testid="stExpander"] [data-testid="stExpanderDetails"] {
+        padding: 0.75rem 1rem 1rem 1rem !important;
+        border-top: 1px solid #f1f5f9 !important;
+        background-color: #f8fafc !important;
+    }
+    
+    /* Ajustes de responsividade para tablet e mobile */
+    @media (max-width: 768px) {
         .block-container {
-            padding-left: 1rem;
-            padding-right: 1rem;
-            padding-top: 1rem;
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+            padding-top: 1rem !important;
         }
         h1 {
-            font-size: 1.7rem;
+            font-size: 1.65rem !important;
         }
         .viva-lead {
-            font-size: 0.95rem;
+            font-size: 0.95rem !important;
+        }
+        .viva-step {
+            font-size: 0.82rem !important;
+            padding: 10px 12px !important;
         }
     }
     

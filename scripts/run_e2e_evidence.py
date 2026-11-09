@@ -1,5 +1,5 @@
 """Script automatizado de validação E2E e geração de evidências visuais com Playwright.
-Executa FastAPI e Streamlit, valida fluxos e captura telas em Desktop, Tablet e Mobile.
+Executa FastAPI e Streamlit, valida fluxos completos, testa acessibilidade/foco e captura telas em Desktop, Tablet e Mobile.
 """
 import os
 import sys
@@ -24,6 +24,37 @@ def aguardar_servidor(url: str, timeout: float = 25.0) -> bool:
             pass
         time.sleep(0.5)
     return False
+
+
+def validar_icones_e_textos(page, contexto: str):
+    """Valida que os ícones possuem fonte correta e tamanho de glifo (<=32px),
+
+    e que textos técnicos (como LLM_PROVIDER ou .env) não aparecem na interface.
+    """
+    # 1. Verifica ausência de jargão técnico em todo o texto visível
+    texto_pagina = page.inner_text("body")
+    termos_proibidos = [
+        "LLM_PROVIDER=openai",
+        ".env",
+    ]
+    for termo in termos_proibidos:
+        assert termo not in texto_pagina, f"ERRO ({contexto}): Termo técnico indevido '{termo}' encontrado na tela!"
+
+    # 2. Verifica que nenhum texto normal (p, h1, h2, h3, div de markdown) contém nomes de ligaturas de ícones
+    textos_markdown = page.locator('div[data-testid="stMarkdownContainer"] p, h1, h2, h3, h4, h5').all_inner_texts()
+    for t in textos_markdown:
+        for ligadura in ["keyboard_double_arrow_right", "keyboard_arrow_right", "double_arrow_right"]:
+            assert ligadura not in t, f"ERRO ({contexto}): Ligatura '{ligadura}' aparecendo como texto em markdown: '{t}'"
+
+    # 3. Verifica que todos os ícones Material Symbols no DOM possuem dimensões de ícone (não texto longo)
+    icones = page.locator('[data-testid="stIconMaterial"]').all()
+    for icone in icones:
+        box = icone.bounding_box()
+        if box:
+            assert box["width"] <= 36, f"ERRO ({contexto}): Ícone está esticado como texto (largura {box['width']}px > 36px)!"
+            assert box["height"] <= 36, f"ERRO ({contexto}): Ícone com altura inesperada ({box['height']}px > 36px)!"
+
+    print(f"  [OK] Ícones e textos validados com sucesso em '{contexto}' ({len(icones)} ícones renderizados como glifos)")
 
 
 def main():
@@ -80,6 +111,9 @@ def main():
             page.goto("http://127.0.0.1:8501", wait_until="networkidle")
             time.sleep(3)
 
+            # Validação na tela inicial
+            validar_icones_e_textos(page, "Desktop Inicial")
+
             # 01. Formulário Inicial
             page.evaluate("window.scrollTo(0, 0)")
             desk_inicial = os.path.join(EVIDENCIAS_DIR, "01_desktop_formulario_inicial.png")
@@ -96,14 +130,29 @@ def main():
                 "Uma calçada perto da praça tem degraus e blocos quebrados que bloqueiam totalmente a passagem de quem usa cadeira de rodas ou carrinho de bebê."
             )
 
+            # Teste de navegação e foco por teclado
+            bairro_input.focus()
+            page.keyboard.press("Tab")
+
             # Submeter análise
-            print("Submetendo para análise de IA...")
-            analisar_btn = page.locator('button:has-text("Analisar meu relato com IA")').first
+            print("Submetendo para análise assistida...")
+            analisar_btn = page.locator('button:has-text("Analisar meu relato")').first
             analisar_btn.click()
 
             # Aguarda a tela de revisão aparecer
-            page.wait_for_selector('text=Sugestão da Inteligência Artificial', timeout=15000)
+            page.wait_for_selector('text=Sugestão do Assistente', timeout=15000)
             time.sleep(2)
+
+            # Validação no formulário de revisão
+            validar_icones_e_textos(page, "Desktop Revisão Humana")
+
+            # Teste do expander (abrir e fechar)
+            expander_summary = page.locator('[data-testid="stExpander"] summary').first
+            if expander_summary.count() > 0:
+                expander_summary.click()
+                time.sleep(1)
+                expander_summary.click()
+                time.sleep(0.5)
 
             # 02. Revisão Humana (Human-in-the-Loop)
             page.evaluate("window.scrollTo(0, 0)")
@@ -121,6 +170,8 @@ def main():
             page.wait_for_selector('text=Registro local concluído com sucesso', timeout=15000)
             time.sleep(2)
 
+            validar_icones_e_textos(page, "Desktop Recibo")
+
             # 03. Recibo pós-confirmação
             page.evaluate("window.scrollTo(0, 0)")
             desk_confirmado = os.path.join(EVIDENCIAS_DIR, "03_desktop_recibo_confirmacao.png")
@@ -137,6 +188,8 @@ def main():
 
             time.sleep(4)
             page.evaluate("window.scrollTo(0, 0)")
+            validar_icones_e_textos(page, "Desktop Painel")
+
             desk_painel = os.path.join(EVIDENCIAS_DIR, "04_desktop_painel_plotly.png")
             page.screenshot(path=desk_painel, full_page=True)
             print(f"Salvo: {desk_painel}")
@@ -148,6 +201,8 @@ def main():
             time.sleep(3)
 
             page.evaluate("window.scrollTo(0, 0)")
+            validar_icones_e_textos(page, "Desktop Sobre")
+
             desk_sobre = os.path.join(EVIDENCIAS_DIR, "05_desktop_como_funciona_ods_etica.png")
             page.screenshot(path=desk_sobre, full_page=True)
             print(f"Salvo: {desk_sobre}")
@@ -163,6 +218,7 @@ def main():
             page_tab.goto("http://127.0.0.1:8501", wait_until="networkidle")
             time.sleep(3)
             page_tab.evaluate("window.scrollTo(0, 0)")
+            validar_icones_e_textos(page_tab, "Tablet")
 
             tab_form = os.path.join(EVIDENCIAS_DIR, "06_tablet_formulario.png")
             page_tab.screenshot(path=tab_form, full_page=True)
@@ -178,6 +234,13 @@ def main():
             page_mob.goto("http://127.0.0.1:8501", wait_until="networkidle")
             time.sleep(3)
             page_mob.evaluate("window.scrollTo(0, 0)")
+            validar_icones_e_textos(page_mob, "Mobile")
+
+            # Verifica que não há overflow horizontal no mobile
+            scroll_width = page_mob.evaluate("() => document.documentElement.scrollWidth")
+            client_width = page_mob.evaluate("() => document.documentElement.clientWidth")
+            print(f"  Mobile scrollWidth: {scroll_width}px, clientWidth: {client_width}px")
+            assert scroll_width <= client_width + 2, f"Overflow horizontal detectado no mobile: {scroll_width} > {client_width}"
 
             mob_form = os.path.join(EVIDENCIAS_DIR, "07_mobile_responsivo.png")
             page_mob.screenshot(path=mob_form, full_page=True)
@@ -185,7 +248,7 @@ def main():
             context_mob.close()
 
             browser.close()
-            print("\nTodas as evidências visuais foram geradas com sucesso!")
+            print("\nTodas as evidências visuais foram geradas e validadas com sucesso!")
 
     finally:
         print("Encerrando processos de teste...")

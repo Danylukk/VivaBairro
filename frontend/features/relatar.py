@@ -1,4 +1,4 @@
-"""Jornada do cidadão: entrada -> API -> revisão com IA -> human-in-the-loop -> registro de sessão."""
+"""Jornada do cidadão: entrada -> API -> revisão assistida -> human-in-the-loop -> registro de sessão."""
 import streamlit as st
 from frontend.providers.api import API_BASE_URL, obter_status, enviar_relato, ErroAmigavel
 from frontend.state.store import registrar
@@ -10,19 +10,19 @@ def renderizar() -> None:
     cabecalho(
         "01 / Conte o que aconteceu",
         "VivaBairro — Sua Voz na Cidade",
-        "Descreva um problema de zeladoria no espaço público. A inteligência artificial analisa a situação, "
-        "propõe uma classificação e orientação, e <strong>você sempre confere e decide</strong> o que registrar."
+        "Descreva um problema de zeladoria urbana. O assistente analisa a situação, "
+        "propõe uma classificação e orientação preliminares, e <strong>você sempre confere e decide</strong> o que registrar."
     )
 
     status = obter_status(API_BASE_URL)
     if status.get("status") != "ok":
-        st.error("⚠️ O serviço de análise automática está temporariamente indisponível. Nenhum dado foi enviado. "
-                 "Verifique se o backend FastAPI está em execução.")
+        st.warning("⚠️ **Aviso de Conexão:** O serviço de análise assistida está temporariamente indisponível. "
+                   "Tente novamente em alguns instantes.")
     elif status.get("modo") == "demonstracao":
-        st.info("🧪 **Modo de demonstração simulada ativo:** As análises são geradas por regras ilustrativas locais, "
-                "sem consumo de LLM externo. Para avaliação da IA real, configure `LLM_PROVIDER=openai` com sua chave no arquivo `.env`.")
+        st.info("ℹ️ **Modo de Demonstração Acadêmica:** Esta análise prévia é uma simulação para fins de teste da interface "
+                "e não substitui o atendimento dos canais oficiais da Prefeitura.")
 
-    # Feedback de registro recém-confirmado
+    # Feedback de registro recém-confirmado (Etapa 3 concluída)
     if st.session_state.get("ultimo_registro"):
         rec = st.session_state["ultimo_registro"]
         st.success(f"✅ **Registro local concluído com sucesso!** Código local gerado: `{rec['id']}`")
@@ -31,7 +31,7 @@ def renderizar() -> None:
             with col_a:
                 st.markdown(f"**Bairro:** {rec['bairro']} · **Categoria:** {rec['categoria']}")
                 st.markdown(f"**Resumo confirmado:** {rec['resumo']}")
-                st.caption(f"Status da revisão humana: *{rec['revisao']}* · Avaliação da IA: *{rec.get('avaliacao_ia', 'Útil')}*")
+                st.caption(f"Revisão humana: *{rec['revisao']}* · Avaliação da sugestão: *{rec.get('avaliacao_ia', 'Sim, adequada')}*")
             with col_b:
                 card_metrica("Código Local", rec["id"], "Apenas nesta sessão", "🏷️", "primario")
         
@@ -52,19 +52,25 @@ def renderizar() -> None:
 
     pendente = st.session_state.get("pendente")
 
-    # CASO 1: Há uma análise de IA pendente para Revisão Humana (Human-in-the-Loop)
+    # CASO 1: Há uma análise pendente para Revisão Humana (Human-in-the-Loop)
     if pendente:
         st.markdown(
-            '<div class="viva-step"><strong>Etapa atual:</strong> 1. Relatar (✓) &nbsp; → &nbsp; '
-            '<strong>2. Revisão Humana da Sugestão da IA (Agora)</strong> &nbsp; → &nbsp; 3. Registro Local</div>',
+            '<div class="viva-step"><strong>Etapa 1:</strong> Relatar (✓) &nbsp; → &nbsp; '
+            '<strong>Etapa 2: Revisão Humana da Sugestão (Agora)</strong> &nbsp; → &nbsp; '
+            '<strong>Etapa 3:</strong> Confirmação e Recibo</div>',
             unsafe_allow_html=True
         )
 
         resultado = pendente["resposta"]["resultado"]
         entrada = pendente["entrada"]
+        eh_simulado = pendente["resposta"]["modo"] == "demonstracao"
 
-        st.subheader("🔍 Sugestão da Inteligência Artificial")
-        st.caption(f"🤖 {pendente['resposta']['aviso']}")
+        if eh_simulado:
+            st.subheader("📋 Sugestão do Assistente (Modo Demonstração)")
+            st.caption("🧪 Esta análise foi calculada por regras de teste da interface. Não é resposta de inteligência artificial.")
+        else:
+            st.subheader("🔍 Sugestão do Assistente Inteligente")
+            st.caption("🤖 Análise processada por inteligência artificial para apoio ao cidadão. Confira e ajuste os dados abaixo.")
 
         # Exibição da prioridade com semântica e acessibilidade visual
         faixa_prioridade(resultado["prioridade"])
@@ -73,7 +79,7 @@ def renderizar() -> None:
             st.error("⚠️ **Atenção Imediata Identificada:** O relato indica possível risco à integridade física. "
                      "Não se coloque em perigo e, se necessário, procure os canais oficiais de socorro e emergência.")
 
-        with st.expander("📄 Ver relato original enviado pelo cidadão", expanded=False):
+        with st.expander("Ver relato original enviado", expanded=False):
             st.markdown(f"**Bairro informado:** {entrada['bairro']}")
             st.markdown(f"**Categoria preliminar:** {entrada['categoria_informada']}")
             st.markdown(f"**Descrição original:** {entrada['descricao']}")
@@ -81,7 +87,7 @@ def renderizar() -> None:
         col_ia1, col_ia2 = st.columns(2)
         with col_ia1:
             with st.container(border=True):
-                st.markdown("##### 📌 Resumo e Justificativa da IA")
+                st.markdown("##### 📌 Resumo e Justificativa")
                 st.write(f"**Resumo sugerido:** {resultado['resumo']}")
                 st.write(f"**Por que esta prioridade?** {resultado['justificativa']}")
         with col_ia2:
@@ -91,9 +97,9 @@ def renderizar() -> None:
                 st.write(f"**Tipo genérico de serviço:** {resultado['encaminhamento']}")
 
         st.divider()
-        st.subheader("✍️ Sua Decisão Humana (Human-in-the-Loop)")
-        st.markdown("A inteligência artificial pode cometer erros ou alucinações. Você tem total controle para "
-                    "corrigir as classificações antes de confirmar.")
+        st.subheader("✍️ Sua Decisão Humana")
+        st.markdown("A sugestão apresentada serve apenas de apoio e pode conter imprecisões. "
+                    "Você tem total autonomia para corrigir as classificações antes de confirmar o registro.")
 
         with st.form("form_revisao"):
             col_rev1, col_rev2 = st.columns(2)
@@ -102,7 +108,7 @@ def renderizar() -> None:
                     "Categoria do problema (você pode alterar)",
                     options=CATEGORIAS,
                     index=CATEGORIAS.index(resultado["categoria"]) if resultado["categoria"] in CATEGORIAS else 0,
-                    help="Corrija se a IA classificou a categoria de forma imprecisa."
+                    help="Corrija se a sugestão classificou a categoria de forma imprecisa."
                 )
             with col_rev2:
                 prioridade_final = st.selectbox(
@@ -122,13 +128,13 @@ def renderizar() -> None:
             )
 
             avaliacao_ia = st.radio(
-                "Avaliação da sugestão gerada pela IA:",
-                options=["Sim, adequada", "Parcialmente adequada", "Incorreta / Ajustei manualmente"],
+                "A sugestão apresentada foi adequada para o seu caso?",
+                options=["Sim, adequada", "Parcialmente adequada", "Não, precisei corrigir"],
                 horizontal=True,
-                help="Esse feedback ajuda a calibrar a eficácia do modelo."
+                help="Esse retorno ajuda a avaliar a clareza da proposta."
             )
 
-            st.caption("🔒 Ao confirmar, o relato será salvo exclusivamente na sessão deste navegador para consulta e gráficos.")
+            st.caption("🔒 Ao confirmar, o relato será salvo exclusivamente na memória desta sessão do navegador.")
             confirmar = st.form_submit_button("✅ Confirmar e Registrar nesta Sessão", type="primary", use_container_width=True)
 
         if confirmar:
@@ -152,16 +158,16 @@ def renderizar() -> None:
                 st.session_state["pendente"] = None
                 st.rerun()
 
-        if st.button("🗑️ Descartar esta sugestão e recomeçar", use_container_width=True):
+        if st.button("↩️ Descartar sugestão e voltar", use_container_width=True):
             st.session_state["pendente"] = None
             st.rerun()
 
-    # CASO 2: Formulário para novo relato
+    # CASO 2: Formulário para novo relato (Etapa 1)
     else:
         st.markdown(
             '<div class="viva-step"><strong>Etapa 1:</strong> Preencha os dados do problema &nbsp; → &nbsp; '
-            '<strong>Etapa 2:</strong> Receba a análise da IA &nbsp; → &nbsp; '
-            '<strong>Etapa 3:</strong> Revise, corrija e confirme</div>',
+            '<strong>Etapa 2:</strong> Revise a sugestão &nbsp; → &nbsp; '
+            '<strong>Etapa 3:</strong> Confirme o registro</div>',
             unsafe_allow_html=True
         )
 
@@ -186,15 +192,15 @@ def renderizar() -> None:
                 "O que aconteceu? (obrigatório — de 30 a 900 caracteres)",
                 max_chars=900,
                 height=150,
-                placeholder="Exemplo: A calçada em frente à praça principal está com desníveis acentuados e buracos "
-                            "que impedem a passagem segura de carrinhos e pessoas em cadeira de rodas.",
+                placeholder="Exemplo: A calçada em frente à praça principal está com desníveis acentuados e blocos "
+                            "quebrados que impedem a passagem segura de carrinhos e pessoas em cadeira de rodas.",
                 help="Descreva objetivamente o obstáculo ou dano observado."
             )
 
             dica_privacidade()
 
             enviar = st.form_submit_button(
-                "🔍 Analisar meu relato com IA",
+                "🔍 Analisar meu relato",
                 type="primary",
                 use_container_width=True,
                 disabled=status.get("status") != "ok"
@@ -213,7 +219,7 @@ def renderizar() -> None:
                     "categoria_informada": categoria,
                     "descricao": desc_limpa,
                 }
-                with st.spinner("⏳ Analisando seu relato com inteligência artificial... Aguarde alguns instantes."):
+                with st.spinner("⏳ Analisando seu relato com o assistente... Aguarde alguns instantes."):
                     try:
                         resposta = enviar_relato(entrada)
                     except ErroAmigavel as exc:

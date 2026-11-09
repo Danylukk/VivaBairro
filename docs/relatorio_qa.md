@@ -9,7 +9,7 @@
 
 A suíte completa de testes automatizados e validações end-to-end foi executada com **100% de sucesso**.
 
-- **Testes Automatizados (Pytest):** **45 testes aprovados** (0 falhas, 0 warnings de bloqueio) em 2.98 segundos.
+- **Testes Automatizados (Pytest):** **45 testes aprovados** (0 falhas, 0 warnings de bloqueio) em ~3.9 segundos.
 - **Validação de Interface Nativa (Streamlit AppTest):** Inicialização, renderização de formulários e navegação entre abas validadas programaticamente.
 - **Validação E2E no Navegador Real (Playwright):** Simulação completa da jornada do cidadão em três resoluções de tela distintas, com geração de 7 capturas de tela em alta resolução.
 - **Auditoria de Código e Compilação:** `python -m compileall -q backend frontend tests scripts` executado sem qualquer erro sintático.
@@ -75,19 +75,19 @@ A suíte completa de testes automatizados e validações end-to-end foi executad
 
 ---
 
-## 3. Evidências Visuais Capturadas no Navegador Real (Playwright)
+## 3. Evidências Visuais e Comparativo Antes/Depois (Playwright)
 
-As capturas de tela foram geradas automaticamente pelo script `scripts/run_e2e_evidence.py`, que executou os dois serviços reais em portas locais (`8000` e `8501`) e interagiu através do Chromium headless:
+As capturas de tela foram geradas automaticamente pelo script `scripts/run_e2e_evidence.py`, que executou os dois serviços reais em portas locais (`8000` e `8501`) e interagiu através do Chromium headless em múltiplos viewports:
 
-| Arquivo de Evidência | Resolução / Viewport | Descrição da Validação |
-|---|---|---|
-| `docs/evidencias/01_desktop_formulario_inicial.png` | 1440 × 900 (Desktop) | Tela inicial com stepper ("Etapa 1 -> Etapa 2 -> Etapa 3"), aviso de LGPD e formulário validado. |
-| `docs/evidencias/02_desktop_revisao_human_in_the_loop.png` | 1440 × 900 (Desktop) | Análise inteligente exibindo prioridade com cor semântica e ícone (🔴 Alta), justificativa, orientação e campos editáveis para conferência do cidadão. |
-| `docs/evidencias/03_desktop_recibo_confirmacao.png` | 1440 × 900 (Desktop) | Recibo de confirmação gerado na sessão (`LOCAL-F1684E02`), com aviso de que não é protocolo municipal e botões direcionadores. |
-| `docs/evidencias/04_desktop_painel_plotly.png` | 1440 × 900 (Desktop) | Painel interativo com 3 filtros simultâneos, cards de indicadores (`card_metrica`), gráfico Plotly interativo e tabela detalhada. |
-| `docs/evidencias/05_desktop_como_funciona_ods_etica.png` | 1440 × 900 (Desktop) | Tela explicativa com abas temáticas de Jornada do Cidadão, ODS 11 e 16, Ética/Limites da IA e Decisões Técnicas. |
-| `docs/evidencias/06_tablet_formulario.png` | 768 × 1024 (Tablet) | Responsividade em viewport intermediário, mantendo espaçamentos confortáveis e legibilidade. |
-| `docs/evidencias/07_mobile_responsivo.png` | 390 × 844 (Mobile) | Responsividade em smartphone com recolhimento automático da sidebar para priorizar o preenchimento pelo cidadão. |
+| # | Arquivo de Evidência (Depois) | Evidência Anterior (Antes) | Resolução | Melhorias Comprovadas Visualmente |
+|---|---|---|:---:|---|
+| 1 | [`docs/evidencias/01_desktop_formulario_inicial.png`](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/01_desktop_formulario_inicial.png) | `docs/evidencias/antes/01_desktop_formulario_inicial.png` | 1440 × 900 | Remoção de instruções de `.env` e `LLM_PROVIDER`; linguagem focada no cidadão; ícones intactos. |
+| 2 | [`docs/evidencias/02_desktop_revisao_human_in_the_loop.png`](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/02_desktop_revisao_human_in_the_loop.png) | `docs/evidencias/antes/02_desktop_revisao_human_in_the_loop.png` | 1440 × 900 | Eliminação de `keyboard_arrow_right` como texto; chevron renderizado como ícone; expander sem sobreposição; botões secundários neutros (não vermelhos). |
+| 3 | [`docs/evidencias/03_desktop_recibo_confirmacao.png`](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/03_desktop_recibo_confirmacao.png) | `docs/evidencias/antes/03_desktop_recibo_confirmacao.png` | 1440 × 900 | Recibo com código local `LOCAL-XXXXXXXX`, aviso institucional sem ambiguidade e botões de direcionamento. |
+| 4 | [`docs/evidencias/04_desktop_painel_plotly.png`](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/04_desktop_painel_plotly.png) | `docs/evidencias/antes/04_desktop_painel_plotly.png` | 1440 × 900 | 3 filtros combinados; aviso amigável sobre dados simulados; gráficos Plotly com hover rico. |
+| 5 | [`docs/evidencias/05_desktop_como_funciona_ods_etica.png`](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/05_desktop_como_funciona_ods_etica.png) | `docs/evidencias/antes/05_desktop_como_funciona_ods_etica.png` | 1440 × 900 | Abas de transparência cidadã, ODS 11 e 16, Ética/Limites e decisões de arquitetura. |
+| 6 | [`docs/evidencias/06_tablet_formulario.png`](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/06_tablet_formulario.png) | `docs/evidencias/antes/06_tablet_formulario.png` | 768 × 1024 | Layout intermediário responsivo sem quebras ou textos cortados. |
+| 7 | [`docs/evidencias/07_mobile_responsivo.png`](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/07_mobile_responsivo.png) | `docs/evidencias/antes/07_mobile_responsivo.png` | 390 × 844 | Eliminação de `keyboard_double_arrow_right` no botão de menu; `scrollWidth == 390px` (zero overflow horizontal); campos em coluna única. |
 
 ---
 
@@ -111,10 +111,12 @@ As capturas de tela foram geradas automaticamente pelo script `scripts/run_e2e_e
 
 - [x] Arquitetura em camadas conferida e separada sem chamadas diretas de IA pelo front-end.
 - [x] 45 testes automatizados executando e passando localmente.
-- [x] Capturas de tela Playwright geradas em Desktop, Tablet e Mobile.
-- [x] Redirecionamento e histórico em `session_state` sem duplicidade ou exceção de widget.
-- [x] Contraste de cores revisado segundo WCAG 2.2 AA.
+- [x] Correção dos ícones de texto (`keyboard_double_arrow_right`, etc.) e preservação estrita de fontes Material Symbols.
+- [x] Correção de sobreposição no controle expander ("Ver relato original enviado").
+- [x] Remoção de instruções técnicas (`.env`, `LLM_PROVIDER=openai`) das telas públicas voltadas ao cidadão.
+- [x] Paleta semântica revisada com vermelho exclusivo para criticidades altas e botões neutros para descarte/ações secundárias.
+- [x] Capturas de tela Playwright geradas em Desktop, Tablet e Mobile (comprovando zero overflow horizontal).
 - [ ] Inserir chave no arquivo `.env` local (`LLM_PROVIDER=openai`, `OPENAI_API_KEY=...`) e registrar as 3 saídas reais de inferência em `docs/casos_teste_ia.md`.
 - [ ] Convidar 3 pessoas do público-alvo para seguir o roteiro de `docs/validacao_usuarios.md` e anotar as impressões.
-- [ ] Gravar vídeo de até 5 minutos seguindo a narrativa em `docs/roteiro_video.md`.
+- [ ] Gravar vídeo de 4m30s seguindo a narrativa em `docs/roteiro_video.md`.
 - [ ] Publicar no GitHub público e submeter os links no Portal do Aluno FIAP.

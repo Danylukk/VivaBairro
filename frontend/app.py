@@ -35,11 +35,11 @@ with st.sidebar:
     st.divider()
     status = obter_status(API_BASE_URL)
     if status.get("status") != "ok":
-        st.error(f"⚠️ **API Desconectada**\n\nO backend FastAPI não está respondendo em `{API_BASE_URL}`.")
+        st.error("⚠️ **Serviço Indisponível**\n\nNão foi possível conectar ao servidor de processamento no momento.")
     elif status.get("modo") == "demonstracao":
-        st.info("🧪 **Modo Demonstração**\n\nRegras locais simuladas ativas. Sem chamada a LLM externo.")
+        st.info("🧪 **Modo de Demonstração**\n\nSimulação local ativa para testes da interface. Nenhuma chamada externa é realizada.")
     else:
-        st.success("✅ **IA Conectada via API**\n\nBackend integrado ao provedor de LLM configurado.")
+        st.success("✅ **Assistente Conectado**\n\nServiço de análise inteligente pronto para uso.")
 
     total_registros = len(st.session_state.get("registros", []))
     st.metric("Relatos nesta sessão", total_registros)
