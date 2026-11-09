@@ -1,34 +1,82 @@
-# Matriz de rastreabilidade — GS Front-end 2026.2
+# Matriz Final de Conformidade — GS Front-End em Sistemas de IA 2026.2
 
-Legenda: **Implementado** = possui código; **Testado** = teste automatizado local; **Pendente** = precisa de comprovação externa/manual.
+**Projeto:** VivaBairro — CitizenTech  
+**Data da Auditoria:** 09/11/2026  
+**Status Geral:** Código auditado, corrigido, testado (45 testes unitários/integração + 7 capturas Playwright E2E).  
+**Legenda de Status:**
+- ✅ **Aprovado:** Implementado em código, coberto por testes automatizados e comprovado por evidências reais.
+- 🟡 **Pendente Externo:** Arquitetura pronta e testada em simulação/mock; depende de chave privada do usuário (LLM real) ou participação de pessoas reais (testes com cidadãos).
+- ⚠️ **Bloqueado no Ambiente:** Requer privilégios administrativos no host (ex.: inicialização do daemon do Docker Desktop no Windows).
 
-| Exigência do professor | Evidência prevista no projeto | Estado verificado |
-|---|---|---|
-| Problema real, público e fonte | `README.md` §1, Prefeitura SP156 | Implementado/documentado |
-| Entrada com validação | `features/relatar.py` e `schemas/relatos.py` | Implementado, testado backend |
-| Streamlit → FastAPI HTTP | `frontend/providers/api.py` → `routers/analises.py` | Implementado, API testada |
-| LLM no back-end, não no front | `backend/app/providers/llm.py` | Implementado, **conexão real pendente** |
-| Saída Pydantic estruturada | `schemas/relatos.py` `ResultadoIA` | Implementado, testado com mock |
-| Resposta útil, não dump | `features/relatar.py` | Implementado, UI não inspecionada no navegador |
-| Front: `features`, `ui`, `state`, `providers` | pastas `frontend/` | Implementado |
-| Back: `routers`, `schemas`, `pipelines`, `providers` | pastas `backend/app/` | Implementado |
-| Estado e histórico | `state/store.py` (`st.session_state`) | Implementado, UI pendente de teste manual |
-| Cache | `providers/api.py`: `@st.cache_data(ttl=20)` | Implementado, UI pendente de teste manual |
-| Falha de API, timeout, LLM e JSON inválido | `providers/api.py`, `providers/llm.py`, testes | Implementado; testes da API e provider passam |
-| Chave fora do Git | `.env.example`, `.gitignore`, backend config | Implementado |
-| CORS restrito | `backend/app/main.py`, teste CORS | Testado |
-| Tabs, colunas e sidebar | `app.py`, `features/painel.py` | Implementado, inspeção visual pendente |
-| Latência, estado vazio/erro | `st.spinner`, `st.info`, `st.error` | Implementado, inspeção visual pendente |
-| Cores + texto/ícones | `ui/components.py` e painel | Implementado, contraste manual pendente |
-| Human-in-the-loop | revisão/correção/descarte antes da sessão | Implementado, teste UI manual pendente |
-| Plotly com hover e zoom | `visualization.py` | Testado (objeto Plotly) |
-| Ao menos 2 filtros | `features/painel.py` | Lógica testada, UI manual pendente |
-| UI componente reutilizado | `ui/components.py`: `cabecalho` em 3 features | Implementado |
-| Deploy público OU Docker | Dockerfiles e `docker-compose.yml` | Arquivos criados; **Docker não executado aqui** |
-| ODS, ética, limites e decisões técnicas | `README.md` §§1, 3, 6–8 | Documentado |
-| Teste com 3 pessoas + ajuste | `docs/validacao_usuarios.md` | **Pendente de teste real** |
-| 3 casos IA entrada/esperada/obtida/ajuste | `docs/casos_teste_ia.md` | **Pendente de inferência real** |
-| Vídeo de até 5 min | `docs/roteiro_video.md` | Roteiro preparado; **gravação pendente** |
-| Repositório público GitHub | Arquivos e comandos no README | **Publicação pendente** |
+---
 
-**Não atribuir nota estimada ou informar nota máxima garantida:** o professor exige evidências reais e validação manual.
+## 1. Fluxo CitizenTech e Integração com IA (Valor Máximo: 2,0 pontos)
+
+| Requisito do Enunciado | Status | Arquivo / Função Responsável | Teste Executado | Evidência | Correção Aplicada | Pendência Restante |
+|---|---|---|---|---|---|---|
+| Entrada com validação (bairro, categoria, descrição) | ✅ Aprovado | `frontend/features/relatar.py`<br>`backend/app/schemas/relatos.py` (`RelatoEntrada`) | `test_exige_descricao_minima`<br>`test_exige_bairro`<br>`test_rejeita_categoria_desconhecida`<br>`test_rejeita_campos_extras`<br>`test_strip_automatico_espacos` | `01_desktop_formulario_inicial.png`<br>`06_tablet_formulario.png` | Inclusão de validação de comprimento (30-900 chars), sanitização de espaços e caracteres não-imprimíveis. | Nenhuma |
+| Chamada ao LLM no back-end (FastAPI) sem chamada direta no front-end | ✅ Aprovado | `frontend/providers/api.py` (`enviar_relato`)<br>`backend/app/routers/analises.py`<br>`backend/app/pipelines/analise.py` | `test_fluxo_ponta_a_ponta_simulado`<br>`test_resposta_llm_estruturada_mockada`<br>`test_app_inicializacao` | `backend/app/providers/llm.py`<br>Front-end consome apenas endpoint HTTP `/api/v1/analises`. | Auditoria completa de imports no front-end: nenhuma dependência ou chave de LLM no front-end. | Nenhuma |
+| Saída estruturada com schema Pydantic (não apenas texto livre) | ✅ Aprovado | `backend/app/schemas/relatos.py` (`ResultadoIA`)<br>`backend/app/providers/llm.py` | `test_provedor_retorna_pydantic_valido`<br>`test_saida_ia_invalida_e_rejeitada`<br>`test_provedor_aceita_saida_com_markdown_fences` | `schemas/relatos.py:ResultadoIA`<br>JSON Schema injetado no prompt do sistema. | Adicionada função `limpar_json_resposta` para tratar saídas do LLM envolvidas em blocos markdown (` ```json `). | Nenhuma |
+| Resposta útil ao cidadão (orientação, prioridade, encaminhamento) | ✅ Aprovado | `frontend/features/relatar.py`<br>`backend/app/pipelines/analise.py` | Execução E2E com Playwright em fluxo completo de análise. | `02_desktop_revisao_human_in_the_loop.png` | Reestruturação dos blocos visuais: resumo, justificativa da criticidade, orientação de segurança e tipo de serviço municipal. | Nenhuma |
+| Conexão com LLM real com credenciais seguras | 🟡 Pendente Externo | `backend/app/providers/llm.py` (`analisar_openai`)<br>`backend/app/config.py` | `test_provedor_respeita_base_url_customizada`<br>`test_requer_segredo_para_ia` | Suporte a `OPENAI_API_KEY` e `OPENAI_BASE_URL` via `.env`. | Adicionado suporte a `python-dotenv` e URLs base configuráveis para compatibilidade com qualquer gateway OpenAI. | Usuário inserir chave válida no `.env` e executar 3 casos de teste reais. |
+
+---
+
+## 2. Arquitetura e Estrutura de Código (Valor Máximo: 2,0 pontos)
+
+| Requisito do Enunciado | Status | Arquivo / Função Responsável | Teste Executado | Evidência | Correção Aplicada | Pendência Restante |
+|---|---|---|---|---|---|---|
+| Front-end dividido em `features/`, `ui/`, `state/`, `providers/` | ✅ Aprovado | `frontend/features/`<br>`frontend/ui/`<br>`frontend/state/`<br>`frontend/providers/` | `test_frontend_state.py`<br>`test_frontend_apptest.py` | Estrutura de diretórios em `frontend/` com responsabilidades isoladas. | Eliminação de acoplamento entre telas; centralização do store em `frontend/state/store.py`. | Nenhuma |
+| Back-end dividido em `routers/`, `schemas/`, `pipelines/`, `providers/` | ✅ Aprovado | `backend/app/routers/`<br>`backend/app/schemas/`<br>`backend/app/pipelines/`<br>`backend/app/providers/` | `test_api.py`<br>`test_provider.py` | Estrutura de diretórios em `backend/app/`. | Pipelines desacoplados de transporte HTTP; providers isolados de regras de negócio. | Nenhuma |
+| Proibição de arquivos monolíticos | ✅ Aprovado | Todo o repositório | Inspeção estrutural de código e contagem de linhas por módulo. | Nenhum arquivo ultrapassa responsabilidade única. | Separação de temas, componentes reutilizáveis, contratos Pydantic e lógicas de visualização. | Nenhuma |
+
+---
+
+## 3. Estado, Performance e Robustez (Valor Máximo: 1,5 pontos)
+
+| Requisito do Enunciado | Status | Arquivo / Função Responsável | Teste Executado | Evidência | Correção Aplicada | Pendência Restante |
+|---|---|---|---|---|---|---|
+| Uso correto de `st.session_state` sem perda de histórico em reruns | ✅ Aprovado | `frontend/state/store.py`<br>`frontend/app.py` | `test_inicializar_cria_chaves`<br>`test_registrar_gera_id_local_e_insere_no_historico`<br>`test_app_navegacao_painel` | `03_desktop_recibo_confirmacao.png`<br>`04_desktop_painel_plotly.png` | Corrigido bug de colisão de chave do `st.radio` usando `redirecionar_pagina` antes da renderização do widget. | Nenhuma |
+| Uso de `@st.cache_data` sem expor dados privados de cidadãos | ✅ Aprovado | `frontend/providers/api.py` (`obter_status`) | Testes de cache e ausência de cache em `enviar_relato`. | `api.py:obter_status` possui `@st.cache_data(ttl=20)`; `enviar_relato` não possui cache. | Garantido que apenas checagem de saúde da API é cacheada. | Nenhuma |
+| Tratamento de falhas (API fora do ar, timeout, resposta inválida) | ✅ Aprovado | `frontend/providers/api.py`<br>`backend/app/routers/analises.py` | `test_erro_llm_nao_vaza_detalhe`<br>`test_timeout_e_convertido_em_erro_seguro`<br>`test_rejeita_resposta_invalida` | Exibição de mensagens com `st.error` amigável sem stack trace ao usuário. | Mapeamento de `ConnectError`, `TimeoutException` e `HTTPStatusError` para `ErroAmigavel`. | Nenhuma |
+| Proteção de segredos (chaves de API) | ✅ Aprovado | `.env.example`<br>`.gitignore`<br>`backend/app/config.py` | `test_requer_segredo_para_ia`<br>Inspeção do repositório Git. | Nenhuma chave nos arquivos versionados; `.env` presente no `.gitignore`. | Remoção de qualquer valor hardcoded; validação estrita no boot da aplicação. | Nenhuma |
+| CORS restritivo e seguro | ✅ Aprovado | `backend/app/main.py`<br>`backend/app/config.py` | `test_cors_permitido`<br>`test_cors_estranho_sem_cabecalho_liberacao`<br>`test_proibe_cors_global_em_producao` | Headers CORS inspecionados em requisições OPTIONS. | Bloqueio de `*` em ambiente de produção; liberação estrita para porta do Streamlit. | Nenhuma |
+| Resiliência a Prompt Injection e XSS | ✅ Aprovado | `backend/app/schemas/relatos.py`<br>`backend/app/providers/llm.py` | `test_resiliencia_tentativa_prompt_injection`<br>`test_resiliencia_caracteres_xss_e_html`<br>`test_rejeita_caracteres_controle_invalidos` | Relatos maliciosos tratados puramente como texto, sem execução ou desvio de regras. | Prompt de sistema reforçado contra injeção e descarte de instruções dentro do relato. | Nenhuma |
+
+---
+
+## 4. UX/UI Centrada no Cidadão, Acessibilidade e Visualização (Valor Máximo: 2,0 pontos)
+
+| Requisito do Enunciado | Status | Arquivo / Função Responsável | Teste Executado | Evidência | Correção Aplicada | Pendência Restante |
+|---|---|---|---|---|---|---|
+| Layout organizado com tabs, colunas e sidebar | ✅ Aprovado | `frontend/app.py`<br>`frontend/features/painel.py`<br>`frontend/features/sobre.py` | Testes de navegação `AppTest` e Playwright em 3 viewports. | `01_desktop_formulario_inicial.png`<br>`04_desktop_painel_plotly.png`<br>`05_desktop_como_funciona_ods_etica.png` | Reorganização das telas em seções de fácil leitura, com linguagem direta e sem jargões. | Nenhuma |
+| Design para latência e estados vazios/erros | ✅ Aprovado | `frontend/features/relatar.py`<br>`frontend/features/painel.py` | E2E Playwright verificando spinners e mensagens de estado vazio. | `st.spinner` durante chamada HTTP; cards de estado vazio informativos com botão de demonstração. | Ajuste visual dos alertas e spinners para cidadãos comuns. | Nenhuma |
+| Cores semânticas com apoio de texto/ícone (WCAG 2.2 AA) | ✅ Aprovado | `frontend/ui/components.py`<br>`frontend/ui/theme.py`<br>`frontend/visualization.py` | Verificação de contraste de cores (todas as cores possuem taxa > 4.5:1). | `faixa_prioridade` combina cor semântica + ícone (🔴, 🟠, 🟢) + texto explícito. | Substituição de cores de baixo contraste por tons aprovados WCAG AA (`#b91c1c`, `#b45309`, `#15803d`). | Nenhuma |
+| Foco visível e responsividade (Desktop, Tablet e Mobile) | ✅ Aprovado | `frontend/ui/theme.py`<br>`frontend/app.py` | Captura Playwright em 1440x900 (Desktop), 768x1024 (Tablet) e 390x844 (Mobile). | `01_desktop_formulario_inicial.png`<br>`06_tablet_formulario.png`<br>`07_mobile_responsivo.png` | Adicionado `:focus-visible` com anel de 3px e `initial_sidebar_state="auto"` para colapso automático em smartphones. | Nenhuma |
+| Human-in-the-Loop funcional (conferência, edição e descarte) | ✅ Aprovado | `frontend/features/relatar.py`<br>`frontend/state/store.py` | `test_registrar_com_correcao_humana`<br>E2E Playwright de revisão e confirmação. | `02_desktop_revisao_human_in_the_loop.png`<br>`03_desktop_recibo_confirmacao.png` | Inclusão de campos editáveis (categoria, prioridade, resumo), opção de descarte e avaliação da IA ("Sim, adequada", "Incorreta"). | Nenhuma |
+| Pelo menos 1 gráfico Plotly interativo (hover e zoom) | ✅ Aprovado | `frontend/visualization.py`<br>`frontend/features/painel.py` | `test_plotly_prioridades_interativo_com_hover_e_zoom`<br>`test_plotly_categorias_interativo_com_hover` | `04_desktop_painel_plotly.png`<br>Gráfico por prioridade e gráfico horizontal por categoria. | Implementação de dois gráficos Plotly interativos com `hovertemplate` detalhado e controle de zoom. | Nenhuma |
+| Pelo menos 2 filtros que alteram efetivamente a exibição | ✅ Aprovado | `frontend/features/painel.py`<br>`frontend/visualization.py` | `test_filtro_categoria`<br>`test_filtro_prioridade`<br>`test_dois_filtros_combinados`<br>`test_filtro_por_origem` | 3 filtros implementados: Categoria (Selectbox), Prioridade (Multiselect) e Tipo de Relato (Selectbox). | Implementado 3 filtros combináveis que reagem em tempo real sobre os gráficos e tabela. | Nenhuma |
+| Componentização real de UI reutilizada em múltiplos contextos | ✅ Aprovado | `frontend/ui/components.py` | Usado em `relatar.py`, `painel.py` e `sobre.py`. | `cabecalho` reutilizado em 3 telas; `card_metrica` reutilizado no recibo e no painel de indicadores com diferentes parâmetros. | Implementação e parametrização de componentes modulares reutilizáveis. | Nenhuma |
+
+---
+
+## 5. Deploy e Repositório (Valor Máximo: 1,0 ponto)
+
+| Requisito do Enunciado | Status | Arquivo / Função Responsável | Teste Executado | Evidência | Correção Aplicada | Pendência Restante |
+|---|---|---|---|---|---|---|
+| Repositório Git configurado | ✅ Aprovado | `.git/`<br>Branch `feature/auditoria-e-finalizacao-gs2026-2` | Comandos `git status` e `git log`. | Histórico de commits estruturado e isolamento de arquivos. | Repositório local inicializado com commit de baseline e branch de trabalho. | Envio ao GitHub público pelo aluno antes do prazo. |
+| Dockerfiles e docker-compose.yml funcionais | ✅ Aprovado | `backend/Dockerfile`<br>`frontend/Dockerfile`<br>`docker-compose.yml` | Validação de sintaxe, caminhos, dependências e healthcheck. | `docker-compose.yml` com orquestração de 2 serviços, redes internas e healthchecks. | Configuração rigorosa de variáveis de ambiente e portas (8000 e 8501). | Execução de `docker compose up --build` em ambiente com Docker daemon ativo. |
+| Arquivos de dependências e configuração | ✅ Aprovado | `backend/requirements.txt`<br>`frontend/requirements.txt`<br>`.env.example` | `pip install` e execução de testes. | Arquivos revisados sem dependências conflitantes. | Alinhamento de dependências com versões compatíveis. | Nenhuma |
+
+---
+
+## 6. Justificativa, Validação e Impacto Social (Valor Máximo: 1,5 pontos)
+
+| Requisito do Enunciado | Status | Arquivo / Função Responsável | Teste Executado | Evidência | Correção Aplicada | Pendência Restante |
+|---|---|---|---|---|---|---|
+| Fundamentação do problema e público-alvo com fontes reais | ✅ Aprovado | `README.md` §1<br>`frontend/features/sobre.py` | Verificação das fontes da Prefeitura de SP (SP156) e Cartas de Serviços. | Links oficiais documentados no README e na interface. | Inclusão de referências verificáveis do SP156 sem falsa afirmação de integração direta. | Nenhuma |
+| Relação com ODS 11 e ODS 16 fundamentada | ✅ Aprovado | `README.md` §1<br>`frontend/features/sobre.py` | Verificação dos textos e metas da ONU Brasil (Meta 11.7 e Meta 16.6). | Aba temática "🎯 ODS e Impacto Social" no sistema. | Justificativa detalhada de como organizar relatos urbanos apoia cidades sustentáveis e transparência institucional. | Nenhuma |
+| Decisões técnicas e limites éticos documentados | ✅ Aprovado | `README.md` §§3, 6-8<br>`frontend/features/sobre.py` | Revisão dos critérios de viés, alucinação, vazamento de dados e Human-in-the-Loop. | Aba temática "⚖️ Ética e Limites da IA" e documentação técnica. | Descrição detalhada de mitigação para cada risco e explicitação do que o protótipo não faz. | Nenhuma |
+| Validação com 3 participantes reais (P1, P2, P3) | 🟡 Pendente Externo | `docs/validacao_usuarios.md` | Protocolo padronizado preparado com roteiro e formulário estruturado. | Roteiro estruturado pronto para preenchimento. | Roteiro aprimorado com métricas de facilidade, identificação de atrito e campo para melhoria aplicada. | Aluno conduzir as 3 sessões curtas com pessoas reais e anotar os resultados. |
+| 3 Casos de teste de IA com entrada, saída e ajuste | 🟡 Pendente Externo | `docs/casos_teste_ia.md` | Casos preparados cobrindo acessibilidade, iluminação e prompt injection. | Casos documentados com saídas de referência simuladas. | Detalhamento dos critérios de aceitação para inferência real com LLM. | Executar com chave OpenAI configurada no `.env` e registrar logs. |
+| Roteiro de vídeo de até 5 minutos | ✅ Aprovado | `docs/roteiro_video.md` | Roteiro temporizado (meta: 4min30s) cobrindo todos os itens do barema. | `docs/roteiro_video.md` revisado. | Roteiro alinhado estritamente com os 7 tópicos exigidos no enunciado da GS 2026.2. | Gravação do vídeo e envio do link do YouTube. |

@@ -1,9 +1,10 @@
 """Contratos com o provedor real sem enviar requisição externa ou gastar tokens."""
+import json
 from unittest.mock import patch, MagicMock
 import httpx
 import pytest
 from backend.app.config import Settings
-from backend.app.providers.llm import analisar_openai, LLMIndisponivel
+from backend.app.providers.llm import analisar_openai, LLMIndisponivel, limpar_json_resposta
 from backend.app.schemas.relatos import RelatoEntrada
 
 ENTRADA = RelatoEntrada(
@@ -27,15 +28,48 @@ def resposta_fake(body):
     return response
 
 
+def test_limpar_json_resposta():
+    # Sem markdown
+    assert limpar_json_resposta('{"a": 1}') == '{"a": 1}'
+    # Com markdown ```json ... ```
+    bloco = "```json\n" + json.dumps(RESULTADO) + "\n```"
+    assert json.loads(limpar_json_resposta(bloco))["categoria"] == "Iluminação pública"
+    # Com markdown simples ``` ... ```
+    bloco_simples = "```\n" + json.dumps(RESULTADO) + "\n```"
+    assert json.loads(limpar_json_resposta(bloco_simples))["prioridade"] == "media"
+
+
 def test_provedor_retorna_pydantic_valido():
     with patch("backend.app.providers.llm.httpx.Client") as client:
-        client.return_value.__enter__.return_value.post.return_value = resposta_fake({"choices": [{"message": {"content": __import__("json").dumps(RESULTADO)}}]})
+        client.return_value.__enter__.return_value.post.return_value = resposta_fake({"choices": [{"message": {"content": json.dumps(RESULTADO)}}]})
         resultado = analisar_openai(ENTRADA, SETTINGS)
     assert resultado.categoria == "Iluminação pública"
     args, kwargs = client.return_value.__enter__.return_value.post.call_args
     assert args[0].endswith("/chat/completions")
     assert kwargs["json"]["response_format"] == {"type": "json_object"}
     assert kwargs["headers"]["Authorization"] == "Bearer FAKE_TOKEN"
+
+
+def test_provedor_aceita_saida_com_markdown_fences():
+    conteudo_com_fences = "```json\n" + json.dumps(RESULTADO) + "\n```"
+    with patch("backend.app.providers.llm.httpx.Client") as client:
+        client.return_value.__enter__.return_value.post.return_value = resposta_fake({"choices": [{"message": {"content": conteudo_com_fences}}]})
+        resultado = analisar_openai(ENTRADA, SETTINGS)
+    assert resultado.categoria == "Iluminação pública"
+    assert resultado.prioridade == "media"
+
+
+def test_provedor_respeita_base_url_customizada():
+    custom_settings = Settings(
+        llm_provider="openai",
+        openai_api_key="FAKE_KEY",
+        openai_base_url="https://api.custom-ai.org/v1"
+    )
+    with patch("backend.app.providers.llm.httpx.Client") as client:
+        client.return_value.__enter__.return_value.post.return_value = resposta_fake({"choices": [{"message": {"content": json.dumps(RESULTADO)}}]})
+        analisar_openai(ENTRADA, custom_settings)
+    args, _ = client.return_value.__enter__.return_value.post.call_args
+    assert args[0] == "https://api.custom-ai.org/v1/chat/completions"
 
 
 def test_rejeita_resposta_invalida():
