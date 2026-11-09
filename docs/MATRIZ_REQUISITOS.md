@@ -2,7 +2,7 @@
 
 **Projeto:** VivaBairro — CitizenTech  
 **Data da Auditoria:** 09/11/2026  
-**Status Geral:** Código auditado, corrigido, testado (45 testes unitários/integração + 7 capturas Playwright E2E).  
+**Status Geral:** Código auditado e testado (47 testes pytest, fluxo Docker E2E e evidências visuais de contraste em desktop e mobile).
 **Legenda de Status:**
 - ✅ **Aprovado:** Implementado em código, coberto por testes automatizados e comprovado por evidências reais.
 - 🟡 **Pendente Externo:** Arquitetura pronta e testada em simulação/mock; depende de chave privada do usuário (LLM real) ou participação de pessoas reais (testes com cidadãos).
@@ -80,3 +80,19 @@
 | Validação com 3 participantes reais (P1, P2, P3) | 🟡 Pendente Externo | `docs/validacao_usuarios.md` | Protocolo padronizado preparado com roteiro e formulário estruturado. | Roteiro estruturado pronto para preenchimento. | Roteiro aprimorado com métricas de facilidade, identificação de atrito e campo para melhoria aplicada. | Aluno conduzir as 3 sessões curtas com pessoas reais e anotar os resultados. |
 | 3 Casos de teste de IA com entrada, saída e ajuste | 🟡 Pendente Externo | `docs/casos_teste_ia.md` | Casos preparados cobrindo acessibilidade, iluminação e prompt injection. | Casos documentados com saídas de referência simuladas. | Detalhamento dos critérios de aceitação para inferência real com LLM. | Executar com chave OpenAI configurada no `.env` e registrar logs. |
 | Roteiro de vídeo de até 5 minutos | ✅ Aprovado | `docs/roteiro_video.md` | Roteiro temporizado (meta: 4min30s) cobrindo todos os itens do barema. | `docs/roteiro_video.md` revisado. | Roteiro alinhado estritamente com os 7 tópicos exigidos no enunciado da GS 2026.2. | Gravação do vídeo e envio do link do YouTube. |
+
+---
+
+## Correção de contraste do tema visual — 09/11/2026
+
+**Defeito identificado pela captura do aluno:** a preferência escura do navegador/sistema ativava elementos nativos do Streamlit em modo escuro, enquanto o CSS personalizado mantinha algumas cores do modo claro. Resultado: fundo escuro com texto escuro na área principal e fundo claro com texto quase branco na barra lateral.
+
+**Correções:** o arquivo `.streamlit/config.toml` fixa uma paleta clara coerente para o Streamlit; `frontend/Dockerfile` copia essa configuração para o contêiner; `frontend/ui/theme.py` alinha o fundo principal e preserva o contraste.
+
+**Teste no navegador:** `python -m scripts.validar_tema_e2e`. Foram verificados desktop em sistema claro (1440×900), desktop em sistema escuro (1440×900) e celular em sistema escuro (390×844). Resultado: contraste do título principal de **17,9:1**, título da barra lateral de **17,1:1** e ausência de transbordamento horizontal nos três cenários.
+
+**Capturas após a correção:** `docs/evidencias/09_tema_contraste_desktop_claro.png`, `docs/evidencias/09_tema_contraste_desktop_sistema_escuro.png` e `docs/evidencias/09_tema_contraste_mobile_sistema_escuro.png`.
+
+**Regressão:** 47 testes pytest passaram; o fluxo Playwright Docker passou (formulário, API, revisão humana, recibo, painel Plotly, mobile). Os contêineres continuaram em modo de demonstração, sem chamadas novas à OpenAI.
+
+**Integridade acadêmica:** esta correção foi motivada pela captura enviada pelo aluno. Não representa a melhoria obrigatória a ser realizada com base no feedback dos três participantes reais, que permanece pendente.

@@ -16,10 +16,18 @@ def aplicar_tema() -> None:
         --viva-border: #e2e8f0;
     }
     
+    /* Superficies claras coerentes com .streamlit/config.toml, inclusive em SO escuro. */
     html, body, .stApp {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        color: #0f172a;
+        background-color: #ffffff !important;
+        color: #0f172a !important;
         overflow-x: hidden !important;
+    }
+
+    [data-testid="stAppViewContainer"],
+    [data-testid="stMain"] {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
     }
     
     .block-container {

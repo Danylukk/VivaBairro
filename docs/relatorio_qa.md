@@ -9,7 +9,7 @@
 
 A suíte completa de testes automatizados e validações end-to-end foi executada com **100% de sucesso**.
 
-- **Testes Automatizados (Pytest):** **45 testes aprovados** (0 falhas, 0 warnings de bloqueio) em ~3.9 segundos.
+- **Testes Automatizados (Pytest):** **47 testes aprovados** (0 falhas, 0 warnings de bloqueio) em ~3.9 segundos.
 - **Validação de Interface Nativa (Streamlit AppTest):** Inicialização, renderização de formulários e navegação entre abas validadas programaticamente.
 - **Validação E2E no Navegador Real (Playwright):** Simulação completa da jornada do cidadão em três resoluções de tela distintas, com geração de 7 capturas de tela em alta resolução.
 - **Auditoria de Código e Compilação:** `python -m compileall -q backend frontend tests scripts` executado sem qualquer erro sintático.
@@ -113,7 +113,7 @@ As capturas de tela foram geradas automaticamente pelo script `scripts/run_e2e_e
 ## 5. Checklist Manual para o Aluno Antes da Submissão Final
 
 - [x] Arquitetura em camadas conferida e separada sem chamadas diretas de IA pelo front-end.
-- [x] 45 testes automatizados executando e passando localmente.
+- [x] 47 testes automatizados executando e passando localmente.
 - [x] Correção dos ícones de texto (`keyboard_double_arrow_right`, etc.) e preservação estrita de fontes Material Symbols.
 - [x] Correção de sobreposição no controle expander ("Ver relato original enviado").
 - [x] Remoção de instruções técnicas (`.env`, `LLM_PROVIDER=openai`) das telas públicas voltadas ao cidadão.
@@ -123,3 +123,19 @@ As capturas de tela foram geradas automaticamente pelo script `scripts/run_e2e_e
 - [ ] Convidar 3 pessoas do público-alvo para seguir o roteiro de `docs/validacao_usuarios.md` e anotar as impressões.
 - [ ] Gravar vídeo de 4m30s seguindo a narrativa em `docs/roteiro_video.md`.
 - [ ] Publicar no GitHub público e submeter os links no Portal do Aluno FIAP.
+
+---
+
+## Correção de contraste do tema visual — 09/11/2026
+
+**Defeito identificado pela captura do aluno:** a preferência escura do navegador/sistema ativava elementos nativos do Streamlit em modo escuro, enquanto o CSS personalizado mantinha algumas cores do modo claro. Resultado: fundo escuro com texto escuro na área principal e fundo claro com texto quase branco na barra lateral.
+
+**Correções:** o arquivo `.streamlit/config.toml` fixa uma paleta clara coerente para o Streamlit; `frontend/Dockerfile` copia essa configuração para o contêiner; `frontend/ui/theme.py` alinha o fundo principal e preserva o contraste.
+
+**Teste no navegador:** `python -m scripts.validar_tema_e2e`. Foram verificados desktop em sistema claro (1440×900), desktop em sistema escuro (1440×900) e celular em sistema escuro (390×844). Resultado: contraste do título principal de **17,9:1**, título da barra lateral de **17,1:1** e ausência de transbordamento horizontal nos três cenários.
+
+**Capturas após a correção:** `docs/evidencias/09_tema_contraste_desktop_claro.png`, `docs/evidencias/09_tema_contraste_desktop_sistema_escuro.png` e `docs/evidencias/09_tema_contraste_mobile_sistema_escuro.png`.
+
+**Regressão:** 47 testes pytest passaram; o fluxo Playwright Docker passou (formulário, API, revisão humana, recibo, painel Plotly, mobile). Os contêineres continuaram em modo de demonstração, sem chamadas novas à OpenAI.
+
+**Integridade acadêmica:** esta correção foi motivada pela captura enviada pelo aluno. Não representa a melhoria obrigatória a ser realizada com base no feedback dos três participantes reais, que permanece pendente.

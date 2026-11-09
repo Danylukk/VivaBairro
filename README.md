@@ -111,7 +111,7 @@ VivaBairro_GS2026_2/
 │   ├── demo_data.py                # Dados sintéticos de exemplo claramente rotulados
 │   ├── Dockerfile                  # Container front-end otimizado (Streamlit)
 │   └── requirements.txt            # Dependências: streamlit, pandas, plotly, httpx
-├── tests/                          # Suite de 45 testes automatizados (Pytest)
+├── tests/                          # Suite de 47 testes automatizados (Pytest)
 │   ├── test_api.py                 # Testes de endpoints, contratos, CORS e segurança (20 testes)
 │   ├── test_provider.py            # Testes do provedor LLM, limpeza de JSON e timeouts (7 testes)
 │   ├── test_visualizacao.py        # Testes de gráficos Plotly e múltiplos filtros (12 testes)
@@ -249,9 +249,9 @@ CORS_ORIGINS=http://localhost:8501,http://127.0.0.1:8501
 
 ---
 
-## 7. Suite de Testes Automatizados (45 Testes com Pytest)
+## 7. Suite de Testes Automatizados (47 Testes com Pytest)
 
-A robustez da solução é comprovada por uma suite com **45 testes automatizados**, cobrindo todas as camadas do sistema:
+A robustez da solução é comprovada por uma suite com **47 testes automatizados**, cobrindo todas as camadas do sistema:
 
 ```bash
 python -m pytest -v
@@ -330,7 +330,7 @@ A tabela a seguir correlaciona os critérios oficiais do barema da Global Soluti
 |---|:---:|---|---|
 | **1. Fluxo CitizenTech e Integração com IA** | 2,0 | **Aprovado em código:** Pipeline completo funcional, validação Pydantic estrita, tratamento de code fences, resiliência a Prompt Injection e fallback determinístico auditado. | **Concluído em 09/11/2026:** três saídas reais de `gpt-4o-mini` documentadas no [relatório de validação do LLM](docs/relatorio_validacao_llm_real_20261109.md). |
 | **2. Arquitetura e Estrutura de Código** | 2,0 | **Aprovado em código:** Separação estrita em camadas (`features/`, `ui/`, `state/`, `providers/` no front; `routers/`, `schemas/`, `pipelines/`, `providers/` no back). Componentes reutilizados e sem chamadas diretas de IA no front. | Nenhuma pendência em código. |
-| **3. Estado, Performance e Robustez** | 1,5 | **Aprovado em código:** Gerenciamento de `st.session_state` estável contra reruns, 45 testes automatizados aprovados no Pytest, CORS restritivo e sem cache compartilhado de dados de munícipes. | Nenhuma pendência em código. |
+| **3. Estado, Performance e Robustez** | 1,5 | **Aprovado em código:** Gerenciamento de `st.session_state` estável contra reruns, 47 testes automatizados aprovados no Pytest, CORS restritivo e sem cache compartilhado de dados de munícipes. | Nenhuma pendência em código. |
 | **4. UX/UI, Acessibilidade e Visualização** | 2,0 | **Aprovado em código:** Diretrizes WCAG 2.2 AA (tríade semântica, contraste alto, foco por teclado), ícones Material Symbols intactos, sem transbordamento horizontal (390px validado) e 3 filtros combináveis em gráficos Plotly. | Nenhuma pendência em código. |
 | **5. Deploy e Repositório** | 1,0 | **Estruturado:** Multi-container `docker-compose.yml`, Dockerfiles otimizados, `.env.example` e `.gitignore` blindados contra chaves. | Docker executado e testado anteriormente no ambiente WSL2; **a publicação em repositório público GitHub continua pendente**. |
 | **6. Justificativa, Validação e Impacto Social** | 1,5 | **Estruturado:** Fundamentação em dados do SP156, metas ODS 11.7 e 16.6, abas de transparência ética e roteiros padronizados de teste preparados. | Conduzir entrevistas com 3 participantes reais conforme `docs/validacao_usuarios.md` e gravar o vídeo de 4m30s seguindo `docs/roteiro_video.md`. |
@@ -360,3 +360,19 @@ python -m scripts.validar_llm_real --executar
 A ferramenta gera `docs/evidencias/llm_real_*.json` com os três casos fictícios e as respostas efetivas, se a API funcionar. **Esses arquivos só podem ser chamados de evidência de LLM real quando `modo_retornado=llm` e a execução for bem-sucedida.** A revisão da qualidade e os ajustes permanecem humanos. A chave nunca é gravada pelo script. O modo demo não atende sozinho ao requisito de LLM real.
 
 **Atualização 09/11/2026:** chave local configurada com segurança e **três chamadas reais ao LLM concluídas**, documentadas no [relatório da IA](docs/relatorio_validacao_llm_real_20261109.md). Ainda faltam validação com três participantes reais, melhoria baseada no feedback, GitHub público e vídeo. Não declarar nota máxima antecipadamente.
+
+---
+
+## Correção de contraste do tema visual — 09/11/2026
+
+**Defeito identificado pela captura do aluno:** a preferência escura do navegador/sistema ativava elementos nativos do Streamlit em modo escuro, enquanto o CSS personalizado mantinha algumas cores do modo claro. Resultado: fundo escuro com texto escuro na área principal e fundo claro com texto quase branco na barra lateral.
+
+**Correções:** o arquivo `.streamlit/config.toml` fixa uma paleta clara coerente para o Streamlit; `frontend/Dockerfile` copia essa configuração para o contêiner; `frontend/ui/theme.py` alinha o fundo principal e preserva o contraste.
+
+**Teste no navegador:** `python -m scripts.validar_tema_e2e`. Foram verificados desktop em sistema claro (1440×900), desktop em sistema escuro (1440×900) e celular em sistema escuro (390×844). Resultado: contraste do título principal de **17,9:1**, título da barra lateral de **17,1:1** e ausência de transbordamento horizontal nos três cenários.
+
+**Capturas após a correção:** `docs/evidencias/09_tema_contraste_desktop_claro.png`, `docs/evidencias/09_tema_contraste_desktop_sistema_escuro.png` e `docs/evidencias/09_tema_contraste_mobile_sistema_escuro.png`.
+
+**Regressão:** 47 testes pytest passaram; o fluxo Playwright Docker passou (formulário, API, revisão humana, recibo, painel Plotly, mobile). Os contêineres continuaram em modo de demonstração, sem chamadas novas à OpenAI.
+
+**Integridade acadêmica:** esta correção foi motivada pela captura enviada pelo aluno. Não representa a melhoria obrigatória a ser realizada com base no feedback dos três participantes reais, que permanece pendente.

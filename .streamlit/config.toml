@@ -1,0 +1,9 @@
+# VivaBairro: tema consistente independente do tema do sistema operacional.
+# Cores do Streamlit e CSS da aplicação devem estar alinhadas.
+[theme]
+base = "light"
+primaryColor = "#0f766e"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f8fafc"
+textColor = "#0f172a"
+font = "sans serif"
