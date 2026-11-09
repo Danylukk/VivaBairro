@@ -271,20 +271,20 @@ python -m pytest -v
 
 ## 8. Testes End-to-End (E2E) e Evidências Visuais (Comparativo Antes / Depois)
 
-Para comprovação irrefutável do funcionamento e da qualidade de experiência do usuário (UX/UI), foi implementado o script automatizado de navegador [`scripts/run_e2e_evidence.py`](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/scripts/run_e2e_evidence.py) utilizando Playwright. O script executou o fluxo completo de um cidadão ponta a ponta em múltiplos dispositivos, validando ausência de overflow e eliminação de caracteres indevidos.
+Para comprovação irrefutável do funcionamento e da qualidade de experiência do usuário (UX/UI), foi implementado o script automatizado de navegador [`scripts/run_e2e_evidence.py`](scripts/run_e2e_evidence.py) utilizando Playwright. O script executou o fluxo completo de um cidadão ponta a ponta em múltiplos dispositivos, validando ausência de overflow e eliminação de caracteres indevidos.
 
 ### Galeria de Evidências Reais (Depois das Correções vs. Estado Anterior):
 As capturas em resolução nativa encontram-se salvas em `docs/evidencias/` (versão corrigida) e `docs/evidencias/antes/` (versão prévia da auditoria):
 
 | # | Evidência Corrigida (Depois) | Evidência Prévia (Antes) | Dispositivo / Viewport | Descrição das Melhorias Comprovadas |
 |---|---|---|:---:|---|
-| 1 | [01_desktop_formulario_inicial.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/01_desktop_formulario_inicial.png) | [antes/01_desktop...](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/antes/01_desktop_formulario_inicial.png) | 1440 × 900 (Desktop) | **Etapa 1:** Remoção de instruções técnicas (`.env`, `LLM_PROVIDER`); linguagem acolhedora para o munícipe; preservação das fontes de ícones. |
-| 2 | [02_desktop_revisao_human_in_the_loop.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/02_desktop_revisao_human_in_the_loop.png) | [antes/02_desktop...](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/antes/02_desktop_revisao_human_in_the_loop.png) | 1440 × 900 (Desktop) | **Etapa 2 (Human-in-the-Loop):** Eliminação de `keyboard_arrow_right` como texto; chevron do expander sem sobreposição; botões secundários neutros (não vermelhos). |
-| 3 | [03_desktop_recibo_confirmacao.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/03_desktop_recibo_confirmacao.png) | [antes/03_desktop...](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/antes/03_desktop_recibo_confirmacao.png) | 1440 × 900 (Desktop) | **Etapa 3:** Recibo consciente com código local `LOCAL-XXXXXXXX`, aviso institucional explícito e botão de visualização no painel. |
-| 4 | [04_desktop_painel_plotly.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/04_desktop_painel_plotly.png) | [antes/04_desktop...](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/antes/04_desktop_painel_plotly.png) | 1440 × 900 (Desktop) | **Painel Interativo:** 3 filtros combinados (Categoria, Prioridade, Origem); aviso claro sobre dados de teste; múltiplos gráficos Plotly interativos. |
-| 5 | [05_desktop_como_funciona_ods_etica.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/05_desktop_como_funciona_ods_etica.png) | [antes/05_desktop...](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/antes/05_desktop_como_funciona_ods_etica.png) | 1440 × 900 (Desktop) | **Transparência e Governança:** Abas estruturadas de Jornada Cidadã, Metas ODS 11/16, Ética/Limites e decisões de arquitetura. |
-| 6 | [06_tablet_formulario.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/06_tablet_formulario.png) | [antes/06_tablet...](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/antes/06_tablet_formulario.png) | 768 × 1024 (Tablet) | **Responsividade Intermediária:** Espaçamentos confortáveis, diagramação fluida e sem corte de textos. |
-| 7 | [07_mobile_responsivo.png](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/07_mobile_responsivo.png) | [antes/07_mobile...](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/evidencias/antes/07_mobile_responsivo.png) | 390 × 844 (Mobile) | **Responsividade Mobile:** Ícone de menu sem texto `keyboard_double_arrow_right`; **zero overflow horizontal** (`scrollWidth == clientWidth`); sidebar recolhida automaticamente. |
+| 1 | [01_desktop_formulario_inicial.png](docs/evidencias/01_desktop_formulario_inicial.png) | [antes/01_desktop...](docs/evidencias/antes/01_desktop_formulario_inicial.png) | 1440 × 900 (Desktop) | **Etapa 1:** Remoção de instruções técnicas (`.env`, `LLM_PROVIDER`); linguagem acolhedora para o munícipe; preservação das fontes de ícones. |
+| 2 | [02_desktop_revisao_human_in_the_loop.png](docs/evidencias/02_desktop_revisao_human_in_the_loop.png) | [antes/02_desktop...](docs/evidencias/antes/02_desktop_revisao_human_in_the_loop.png) | 1440 × 900 (Desktop) | **Etapa 2 (Human-in-the-Loop):** Eliminação de `keyboard_arrow_right` como texto; chevron do expander sem sobreposição; botões secundários neutros (não vermelhos). |
+| 3 | [03_desktop_recibo_confirmacao.png](docs/evidencias/03_desktop_recibo_confirmacao.png) | [antes/03_desktop...](docs/evidencias/antes/03_desktop_recibo_confirmacao.png) | 1440 × 900 (Desktop) | **Etapa 3:** Recibo consciente com código local `LOCAL-XXXXXXXX`, aviso institucional explícito e botão de visualização no painel. |
+| 4 | [04_desktop_painel_plotly.png](docs/evidencias/04_desktop_painel_plotly.png) | [antes/04_desktop...](docs/evidencias/antes/04_desktop_painel_plotly.png) | 1440 × 900 (Desktop) | **Painel Interativo:** 3 filtros combinados (Categoria, Prioridade, Origem); aviso claro sobre dados de teste; múltiplos gráficos Plotly interativos. |
+| 5 | [05_desktop_como_funciona_ods_etica.png](docs/evidencias/05_desktop_como_funciona_ods_etica.png) | [antes/05_desktop...](docs/evidencias/antes/05_desktop_como_funciona_ods_etica.png) | 1440 × 900 (Desktop) | **Transparência e Governança:** Abas estruturadas de Jornada Cidadã, Metas ODS 11/16, Ética/Limites e decisões de arquitetura. |
+| 6 | [06_tablet_formulario.png](docs/evidencias/06_tablet_formulario.png) | [antes/06_tablet...](docs/evidencias/antes/06_tablet_formulario.png) | 768 × 1024 (Tablet) | **Responsividade Intermediária:** Espaçamentos confortáveis, diagramação fluida e sem corte de textos. |
+| 7 | [07_mobile_responsivo.png](docs/evidencias/07_mobile_responsivo.png) | [antes/07_mobile...](docs/evidencias/antes/07_mobile_responsivo.png) | 390 × 844 (Mobile) | **Responsividade Mobile:** Ícone de menu sem texto `keyboard_double_arrow_right`; **zero overflow horizontal** (`scrollWidth == clientWidth`); sidebar recolhida automaticamente. |
 
 ---
 
@@ -316,9 +316,9 @@ A interface foi projetada e inspecionada segundo as diretrizes de acessibilidade
 
 A documentação do projeto inclui protocolos prontos para aplicação de testes reais:
 
-- **Casos de Teste Estruturados de IA ([docs/casos_teste_ia.md](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/casos_teste_ia.md)):** Três cenários delimitados (calçada inacessível com foco em mobilidade, iluminação pública deficiente e tentativa deliberada de prompt injection), detalhando entrada, saída esperada, critérios de sucesso e instruções passo a passo para execução com a chave da OpenAI.
-- **Protocolo de Validação com Usuários ([docs/validacao_usuarios.md](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/validacao_usuarios.md)):** Roteiro estruturado para teste com 3 pessoas de perfis diversos (idoso com menor letramento digital, jovem universitário e pessoa com mobilidade reduzida/baixa visão), contendo matriz de observações e rastreabilidade de melhorias de interface implementadas a partir de feedbacks.
-- **Roteiro de Gravação de Vídeo ([docs/roteiro_video.md](file:///c:/Users/thiago.danyluk/Documents/Thiago%20-%20Chiasa/GS2/FRONT/VivaBairro_GS_Frontend_2026_2/VivaBairro_GS2026_2/docs/roteiro_video.md)):** Script completo cronometrado para gravação de vídeo demonstrativo de 4 minutos e 30 segundos, contemplando apresentação do problema, fluxo ao vivo, Human-in-the-Loop, painel Plotly, código da arquitetura e reflexão ética sobre ODS.
+- **Casos de Teste Estruturados de IA ([docs/casos_teste_ia.md](docs/casos_teste_ia.md)):** Três cenários delimitados (calçada inacessível com foco em mobilidade, iluminação pública deficiente e tentativa deliberada de prompt injection), detalhando entrada, saída esperada, critérios de sucesso e instruções passo a passo para execução com a chave da OpenAI.
+- **Protocolo de Validação com Usuários ([docs/validacao_usuarios.md](docs/validacao_usuarios.md)):** Roteiro estruturado para teste com 3 pessoas de perfis diversos (idoso com menor letramento digital, jovem universitário e pessoa com mobilidade reduzida/baixa visão), contendo matriz de observações e rastreabilidade de melhorias de interface implementadas a partir de feedbacks.
+- **Roteiro de Gravação de Vídeo ([docs/roteiro_video.md](docs/roteiro_video.md)):** Script completo cronometrado para gravação de vídeo demonstrativo de 4 minutos e 30 segundos, contemplando apresentação do problema, fluxo ao vivo, Human-in-the-Loop, painel Plotly, código da arquitetura e reflexão ética sobre ODS.
 
 ---
 
@@ -337,3 +337,26 @@ A tabela a seguir correlaciona os critérios oficiais do barema da Global Soluti
 
 ---
 *Projeto acadêmico desenvolvido para a Global Solution 2026.2 — FIAP.*
+
+
+---
+
+## Próximas etapas para o trio (9/11/2026)
+
+Consulte [o plano de fechamento da equipe](docs/PLANO_DE_FECHAMENTO_TRIO.md) para divisão de atividades, registro de três participantes reais, integração com outras disciplinas e preparação do GitHub/vídeo.
+
+Para conferir a configuração de IA **sem consumo de API**:
+
+```bash
+python -m scripts.validar_llm_real
+```
+
+Depois de configurar `.env` local com `LLM_PROVIDER=openai` e a chave privada, revisar custos e autorizar conscientemente **três chamadas reais**:
+
+```bash
+python -m scripts.validar_llm_real --executar
+```
+
+A ferramenta gera `docs/evidencias/llm_real_*.json` com os três casos fictícios e as respostas efetivas, se a API funcionar. **Esses arquivos só podem ser chamados de evidência de LLM real quando `modo_retornado=llm` e a execução for bem-sucedida.** A revisão da qualidade e os ajustes permanecem humanos. A chave nunca é gravada pelo script. O modo demo não atende sozinho ao requisito de LLM real.
+
+**Pendências:** chave ainda não configurada nesta cópia; três participantes reais ainda sem validação concluída; publicação pública e vídeo ainda não realizados. Não declarar nota máxima antecipadamente.
