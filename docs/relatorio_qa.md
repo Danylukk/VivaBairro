@@ -91,16 +91,19 @@ As capturas de tela foram geradas automaticamente pelo script `scripts/run_e2e_e
 
 ---
 
-## 4. Estado do Docker no Ambiente de Teste
+## 4. Estado e Validação Efetiva do Docker
 
-- **Instalação:** `Docker versão 29.6.1` e `Docker Compose versão v5.3.0` estão instalados no sistema operacional.
-- **Execução do Daemon:** O serviço `Docker Desktop Service (com.docker.service)` encontra-se parado no host. Por se tratar de um ambiente corporativo/acadêmico sem privilégios de Administrador do Windows, o comando de inicialização do serviço (`Start-Service com.docker.service`) não pôde ser executado diretamente por este processo.
-- **Validação de Artefatos:** Os arquivos `backend/Dockerfile`, `frontend/Dockerfile` e `docker-compose.yml` foram auditados:
-  - Contextos de build e caminhos de cópia rigorosamente validados.
-  - Healthchecks HTTP configurados no endpoint `/health`.
-  - Dependência entre serviços com `condition: service_healthy`.
-  - Isolação de redes e exposição nas portas `8000` (API) e `8501` (Web).
-- **Instrução de Execução:** Em máquina com Docker Desktop iniciado:
+- **Instalação e Daemon:** `Docker versão 29.6.1` e `Docker Compose versão v5.3.0` validados em execução ativa no WSL2 (`desktop-linux`).
+- **Build dos Containers (`docker compose build`):** Executado com sucesso (exit code 0), gerando as imagens `vivabairro_gs2026_2-api:latest` e `vivabairro_gs2026_2-web:latest`.
+- **Execução em Segundo Plano (`docker compose up -d`):** Ambos os serviços iniciados:
+  - `vivabairro_gs2026_2-api-1`: em execução na porta 8000, reportando status `healthy` via healthcheck HTTP `/health`.
+  - `vivabairro_gs2026_2-web-1`: em execução na porta 8501, comunicando-se com a API via rede interna (`http://api:8000`).
+- **Validação E2E nos Containers Ativos (`scripts/test_docker_e2e.py`):**
+  - Script Playwright conectou-se diretamente a `http://127.0.0.1:8501`.
+  - Preenchimento do formulário, comunicação inter-serviços (Web -> API), retorno de análise estruturada, revisão humana, confirmação e geração de recibo `LOCAL-XXXXXXXX` validados com sucesso.
+  - Exibição de gráficos Plotly e ausência de overflow horizontal mobile no container comprovados com 100% de sucesso.
+- **Encerramento Limpo (`docker compose down`):** Containers e rede interna removidos sem resíduos.
+- **Comando Oficial para Avaliadores:**
   ```bash
   docker compose up --build
   ```

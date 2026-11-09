@@ -11,3 +11,7 @@ venv/
 htmlcov/
 .DS_Store
 *.log
+test_*.png
+expander_view.png
+playwright-report/
+test-results/
