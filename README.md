@@ -334,7 +334,7 @@ A tabela a seguir correlaciona os critérios oficiais do barema da Global Soluti
 | **3. Estado, Performance e Robustez** | 1,5 | **Aprovado em código:** Gerenciamento de `st.session_state` estável contra reruns, 48 testes automatizados aprovados no Pytest, CORS restritivo e sem cache compartilhado de dados de munícipes. | Nenhuma pendência em código. |
 | **4. UX/UI, Acessibilidade e Visualização** | 2,0 | **Aprovado em código:** Diretrizes WCAG 2.2 AA (tríade semântica, contraste alto, foco por teclado), ícones Material Symbols intactos, sem transbordamento horizontal (390px validado) e 3 filtros combináveis em gráficos Plotly. | Nenhuma pendência em código. |
 | **5. Deploy e Repositório** | 1,0 | **Implementado:** Docker Compose com execução E2E comprovada anteriormente; `.env` protegido pelo `.gitignore`. | **Repositório público publicado:** https://github.com/Danylukk/VivaBairro. |
-| **6. Justificativa, Validação e Impacto Social** | 1,5 | **Validação qualitativa reportada com três participantes externos (P1, P2 e P3):** fundamentação em ODS, feedback de P1 motivou simplificação da revisão e foi reavaliado positivamente. P2 usou sem dificuldade; P3 usou sem dúvidas, mas achou a solução simples e não demonstrou interesse. Registros e evidências técnicas documentados. | **Três avaliações externas reportadas.** Gravar e publicar o vídeo conforme `docs/roteiro_video.md`. |
+| **6. Justificativa, Validação e Impacto Social** | 1,5 | **Validação qualitativa reportada com três participantes externos (P1, P2 e P3):** fundamentação em ODS, feedback de P1 motivou simplificação da revisão e foi reavaliado positivamente. P2 usou sem dificuldade; P3 usou sem dúvidas, mas achou a solução simples e não demonstrou interesse. Registros e evidências técnicas documentados. | **Três avaliações externas reportadas.** [Vídeo silencioso produzido (4min35s)](docs/video/VivaBairro_GS2026_2_Demo_SemAudio.mp4). Publicar no canal exigido pelo professor, se necessário. |
 
 ---
 *Projeto acadêmico desenvolvido para a Global Solution 2026.2 — FIAP.*
@@ -360,7 +360,7 @@ python -m scripts.validar_llm_real --executar
 
 A ferramenta gera `docs/evidencias/llm_real_*.json` com os três casos fictícios e as respostas efetivas, se a API funcionar. **Esses arquivos só podem ser chamados de evidência de LLM real quando `modo_retornado=llm` e a execução for bem-sucedida.** A revisão da qualidade e os ajustes permanecem humanos. A chave nunca é gravada pelo script. O modo demo não atende sozinho ao requisito de LLM real.
 
-**Atualização 13/11/2026:** três chamadas reais ao LLM documentadas no [relatório da IA](docs/relatorio_validacao_llm_real_20261109.md), GitHub público publicado, [avaliação técnica simulada](docs/relatorio_usabilidade_simulada_20261113.md) e [feedback externo real relatado pelo aluno](docs/validacao_usuarios.md) que motivou melhoria visual. **Três avaliações externas reportadas (P1, P2, P3); falta o vídeo final.** A reavaliação qualitativa de P1 após a melhoria foi registrada. P3 considerou o protótipo simples, embora tenha utilizado as funcionalidades sem dúvidas. Não declarar nota máxima antecipadamente.
+**Atualização 13/11/2026:** três chamadas reais ao LLM documentadas no [relatório da IA](docs/relatorio_validacao_llm_real_20261109.md), GitHub público publicado, [avaliação técnica simulada](docs/relatorio_usabilidade_simulada_20261113.md) e [feedback externo real relatado pelo aluno](docs/validacao_usuarios.md) que motivou melhoria visual. **Três avaliações externas reportadas (P1, P2, P3); vídeo MP4 silencioso produzido e incluído no repositório.** A reavaliação qualitativa de P1 após a melhoria foi registrada. P3 considerou o protótipo simples, embora tenha utilizado as funcionalidades sem dúvidas. Não declarar nota máxima antecipadamente.
 
 ---
 
@@ -401,3 +401,16 @@ Os três cenários representam **personas fictícias**, não entrevistas nem tes
 **Evidências:** `docs/evidencias/feedback_usabilidade_20261113/` com capturas da revisão **antes** e **depois** em desktop e celular e da área adicional aberta. Verificação reexecutável: `python -m scripts.validar_densidade_revisao --fase depois`, com API local em modo `demo`. Foram aprovados **48 testes pytest**, os três cenários E2E do fluxo e os três testes de contraste; não houve novas chamadas à OpenAI.
 
 **Reavaliação qualitativa:** a mesma participante externa gostou da versão revisada e relatou **maior clareza da tela**, sem excesso de informações pouco relevantes ao usuário. É um retorno humano específico sobre a melhoria, não um novo teste completo das tarefas. Com os feedbacks de P1, P2 e P3 registrados, a quantidade prevista de três participantes externos foi atingida. P3 apontou simplicidade do escopo e não demonstrou interesse, embora não tenha tido dificuldades de uso.
+
+---
+
+## Vídeo demonstrativo silencioso — 13/11/2026
+
+**[Assistir ou baixar o vídeo final (MP4)](docs/video/VivaBairro_GS2026_2_Demo_SemAudio.mp4)**
+
+- **Duração:** 4min35s (dentro do limite de 5 minutos).
+- **Formato:** H.264 MP4, 1600×900, 20 fps, sem áudio. Inclui textos curtos em tela.
+- **Conteúdo:** problema urbano, proposta CitizenTech, gravação da interface em uso, preenchimento do formulário, análise assistida, revisão humana, comprovante local, painel Plotly, ODS, arquitetura, resultados de testes e melhoria da experiência baseada no feedback de uma participante.
+- **Transparência:** a gravação do fluxo utiliza `LLM_PROVIDER=demo` (regras locais); as três inferências reais já executadas com OpenAI foram verificadas separadamente em 09/11/2026. Nenhuma chamada paga ocorreu na produção deste vídeo.
+- **Reprodução:** `scripts/gravar_demo_video.py`, `scripts/gravar_painel_ods_video.py` (recuperação parcial) e `scripts/editar_video_gs.py`. São ferramentas de gravação/edição; não alteram o comportamento da aplicação.
+- **Publicação:** o MP4 está disponível neste repositório público. Ainda não foi enviado ao YouTube; confirme se o professor exige link externo ou apresentação com narração dos integrantes.

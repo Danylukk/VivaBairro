@@ -2,7 +2,7 @@
 
 **Duração-alvo:** 4min30s (270 segundos). **Limite do professor:** 5 minutos.
 **Equipe:** trio, sem nomes definidos neste documento.
-**Situação:** roteiro pronto, **vídeo ainda não gravado**. As falas condicionais sobre LLM real e participantes devem ser atualizadas exclusivamente após a validação.
+**Situação:** vídeo demonstrativo silencioso produzido em 13/11/2026, com duração de **4min35s**. O roteiro narrado abaixo permanece como alternativa caso a instituição exija apresentação oral. O vídeo sem áudio apresenta a explicação por títulos e legendas curtas e sinaliza explicitamente o modo de demonstração.
 
 | Tempo | Integrante sugerido | Tela / demonstração | Fala-base objetiva |
 |---|---|---|---|
@@ -26,4 +26,4 @@
 6. Gravar e conferir duração **inferior a 5:00**, áudio, fluidez e informações corretas.
 7. Publicar no YouTube como **não listado** ou disponibilizar arquivo na forma aceita pelo professor, e inserir link real no README.
 
-**Não há gravação ou publicação efetuada por este documento.**
+**Arquivo pronto:** [VivaBairro_GS2026_2_Demo_SemAudio.mp4](video/VivaBairro_GS2026_2_Demo_SemAudio.mp4). Duração verificada: 04:35. Vídeo H.264 1600×900, sem trilha de áudio. O arquivo está no repositório; não foi publicado no YouTube. Verificar se a disciplina exige narração dos integrantes ou link de publicação externa.
