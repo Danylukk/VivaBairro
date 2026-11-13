@@ -38,7 +38,7 @@ A jornada do cidadão na solução VivaBairro segue um pipeline estrito, transpa
 ```mermaid
 flowchart TD
     A["1. Cidadão preenche relato\n(Bairro, Categoria, Descrição)"] --> B["2. Validação Front-end\n(Streamlit + avisos LGPD)"]
-    B -->|HTTP POST /api/analises/relato| C["3. Back-end FastAPI\n(Validação de entrada Pydantic)"]
+    B -->|HTTP POST /api/v1/analises| C["3. Back-end FastAPI\n(Validação de entrada Pydantic)"]
     C --> D{"4. Orquestrador de IA\n(LLM_PROVIDER)"}
     D -->|openai| E["5a. Chamada LLM Real\n(OpenAI Chat Completions)"]
     D -->|demo| F["5b. Provedor de Demonstração\n(Respostas simuladas auditadas)"]
@@ -54,7 +54,7 @@ flowchart TD
 ### Detalhamento das Etapas:
 1. **Entrada do Cidadão:** O usuário seleciona o bairro, a categoria inicial e descreve a situação em texto livre. Mensagens de privacidade orientam a não fornecer dados sensíveis.
 2. **Validação Front-end:** Verificação de tamanho mínimo de texto (>= 15 caracteres) e bairro (>= 3 caracteres).
-3. **Comunicação HTTP Segura:** O front-end Streamlit dispara uma requisição POST assíncrona para o FastAPI (`/api/analises/relato`). O front-end **nunca se comunica diretamente com provedores de IA**.
+3. **Comunicação HTTP Segura:** O front-end Streamlit dispara uma requisição HTTP POST para o FastAPI (`/api/v1/analises`). O front-end **nunca se comunica diretamente com provedores de IA**.
 4. **Validação de Entrada (Pydantic):** O schema `RelatoEntrada` higieniza espaços em branco e garante integridade do payload, prevenindo injeções de controle.
 5. **Orquestração de IA:** O pipeline aciona o LLM via system prompt robusto com delimitação de persona, regras de segurança e instrução estrita de saída em formato JSON válido.
 6. **Validação de Saída (Pydantic):** O schema `ResultadoIA` valida se campos obrigatórios (`resumo`, `prioridade`, `justificativa`, `orientacao_cidadao`, `tipo_servico_sugerido`) estão no formato e vocabulário permitidos.
@@ -78,7 +78,7 @@ VivaBairro_GS2026_2/
 │   │   ├── config.py               # Configurações via variáveis de ambiente (python-dotenv)
 │   │   ├── routers/
 │   │   │   ├── __init__.py
-│   │   │   └── analises.py         # Endpoints REST (/health, /api/analises/relato)
+│   │   │   └── analises.py         # Endpoints REST (/health, /api/v1/analises)
 │   │   ├── schemas/
 │   │   │   ├── __init__.py
 │   │   │   └── relatos.py          # Contratos Pydantic de entrada, saída e auditoria
@@ -307,7 +307,7 @@ A interface foi projetada e inspecionada segundo as diretrizes de acessibilidade
 ## 10. Ética, Segurança e Limites da IA
 
 - **Prevenção de Alucinações de Autoridade:** O system prompt do modelo proíbe estritamente a criação de números de protocolos governamentais ou promessas de prazos de atendimento municipal.
-- **Tratamento de Entradas Não Confiáveis:** Todo texto submetido pelo cidadão é encapsulado entre delimitadores estritos (`<relato_cidadao>...</relato_cidadao>`), instruindo o modelo a tratar o conteúdo estritamente como dado descritivo e ignorar qualquer tentativa de manipulação de instruções do sistema (Prompt Injection).
+- **Tratamento de Entradas Não Confiáveis:** O relato é enviado como JSON na mensagem de usuário ao LLM. A instrução de sistema determina que esse conteúdo seja tratado como dado não confiável e que tentativas de manipulação (prompt injection) sejam ignoradas; não há delimitadores XML implementados.
 - **Proteção de Privacidade (LGPD):** O sistema não realiza fingerprinting, não armazena cookies invasivos, não coleta dados biométricos e orienta o cidadão a não inserir nomes próprios, telefones ou documentos pessoais.
 - **Transparência sobre Limitações:** A aplicação deixa evidente que se trata de uma ferramenta de auxílio preliminar e que modelos de linguagem estatísticos estão sujeitos a vieses ou classificações equivocadas, razão pela qual o filtro humano (**Human-in-the-Loop**) é mandatário no sistema.
 
@@ -318,7 +318,7 @@ A interface foi projetada e inspecionada segundo as diretrizes de acessibilidade
 A documentação do projeto inclui protocolos prontos para aplicação de testes reais:
 
 - **Casos de Teste Estruturados de IA ([docs/casos_teste_ia.md](docs/casos_teste_ia.md)):** Três cenários delimitados (calçada inacessível com foco em mobilidade, iluminação pública deficiente e tentativa deliberada de prompt injection), detalhando entrada, saída esperada, critérios de sucesso e instruções passo a passo para execução com a chave da OpenAI.
-- **Validação com pessoas ([docs/validacao_usuarios.md](docs/validacao_usuarios.md)):** Roteiro para três participantes externos e registro de **um feedback externo recebido**, além da autoavaliação do integrante. A sugestão externa de reduzir o excesso de informação levou à simplificação da etapa de revisão, com capturas antes/depois e verificação técnica.
+- **Validação com pessoas ([docs/validacao_usuarios.md](docs/validacao_usuarios.md)):** Roteiro e registro qualitativo de **três avaliações externas (P1, P2 e P3)**, além da autoavaliação do integrante. A sugestão externa de reduzir o excesso de informação levou à simplificação da etapa de revisão, com capturas antes/depois e verificação técnica.
 - **Roteiro de Gravação de Vídeo ([docs/roteiro_video.md](docs/roteiro_video.md)):** Script completo cronometrado para gravação de vídeo demonstrativo de 4 minutos e 30 segundos, contemplando apresentação do problema, fluxo ao vivo, Human-in-the-Loop, painel Plotly, código da arquitetura e reflexão ética sobre ODS.
 
 ---
@@ -334,7 +334,7 @@ A tabela a seguir correlaciona os critérios oficiais do barema da Global Soluti
 | **3. Estado, Performance e Robustez** | 1,5 | **Aprovado em código:** Gerenciamento de `st.session_state` estável contra reruns, 48 testes automatizados aprovados no Pytest, CORS restritivo e sem cache compartilhado de dados de munícipes. | Nenhuma pendência em código. |
 | **4. UX/UI, Acessibilidade e Visualização** | 2,0 | **Aprovado em código:** Diretrizes WCAG 2.2 AA (tríade semântica, contraste alto, foco por teclado), ícones Material Symbols intactos, sem transbordamento horizontal (390px validado) e 3 filtros combináveis em gráficos Plotly. | Nenhuma pendência em código. |
 | **5. Deploy e Repositório** | 1,0 | **Implementado:** Docker Compose com execução E2E comprovada anteriormente; `.env` protegido pelo `.gitignore`. | **Repositório público publicado:** https://github.com/Danylukk/VivaBairro. |
-| **6. Justificativa, Validação e Impacto Social** | 1,5 | **Validação qualitativa reportada com três participantes externos (P1, P2 e P3):** fundamentação em ODS, feedback de P1 motivou simplificação da revisão e foi reavaliado positivamente. P2 usou sem dificuldade; P3 usou sem dúvidas, mas achou a solução simples e não demonstrou interesse. Registros e evidências técnicas documentados. | **Três avaliações externas reportadas.** [Vídeo silencioso produzido (4min35s)](docs/video/VivaBairro_GS2026_2_Demo_SemAudio.mp4). Publicar no canal exigido pelo professor, se necessário. |
+| **6. Justificativa, Validação e Impacto Social** | 1,5 | **Validação qualitativa reportada com três participantes externos (P1, P2 e P3):** fundamentação em ODS, feedback de P1 motivou simplificação da revisão e foi reavaliado positivamente. P2 usou sem dificuldade; P3 usou sem dúvidas, mas achou a solução simples e não demonstrou interesse. Registros e evidências técnicas documentados. | **Três avaliações externas reportadas.** [Vídeo silencioso revisado (4min52s)](docs/video/VivaBairro_GS2026_2_Demo_SemAudio.mp4). Publicar no canal exigido pelo professor, se necessário. |
 
 ---
 *Projeto acadêmico desenvolvido para a Global Solution 2026.2 — FIAP.*
@@ -376,7 +376,7 @@ A ferramenta gera `docs/evidencias/llm_real_*.json` com os três casos fictício
 
 **Regressão:** 47 testes pytest passaram; o fluxo Playwright Docker passou (formulário, API, revisão humana, recibo, painel Plotly, mobile). Os contêineres continuaram em modo de demonstração, sem chamadas novas à OpenAI.
 
-**Integridade acadêmica:** esta correção foi motivada pela captura enviada pelo aluno. Não representa a melhoria obrigatória a ser realizada com base no feedback dos três participantes reais, que permanece pendente.
+**Nota histórica:** esta correção de contraste, realizada em 09/11, não decorria de feedback dos participantes. Posteriormente, em 13/11, a revisão da interface foi simplificada após feedback real de P1 e reavaliada positivamente por ela, como documentado abaixo.
 
 ---
 
@@ -388,7 +388,7 @@ Foi realizada uma [avaliação técnica de usabilidade por três cenários simul
 
 **Verificação técnica:** `python -m pytest -q` → **48 aprovados**. `python -m scripts.validar_tema_e2e --url http://127.0.0.1:18501` → três resoluções/temas aprovados. Durante a execução de 13/11, os servidores foram iniciados diretamente no Windows porque o Docker Desktop não estava ativo. **Nenhuma chamada adicional à OpenAI foi realizada**.
 
-Os três cenários representam **personas fictícias**, não entrevistas nem testes com cidadãos reais. O requisito acadêmico de três participantes e uma melhoria motivada pelo feedback real **permanece pendente**.
+Os três cenários acima representam **personas fictícias**, não entrevistas com cidadãos reais. Posteriormente, foram documentados separadamente **três feedbacks externos reais reportados** e uma melhoria de interface derivada da avaliação de P1; consultar a seção seguinte.
 
 ---
 
@@ -406,11 +406,11 @@ Os três cenários representam **personas fictícias**, não entrevistas nem tes
 
 ## Vídeo demonstrativo silencioso — 13/11/2026
 
-**[Assistir ou baixar o vídeo final (MP4)](docs/video/VivaBairro_GS2026_2_Demo_SemAudio.mp4)**
+**[Assistir ou baixar o vídeo final revisado (MP4)](docs/video/VivaBairro_GS2026_2_Demo_SemAudio.mp4)**
 
-- **Duração:** 4min35s (dentro do limite de 5 minutos).
+- **Duração:** 4min52s (dentro do limite de 5 minutos).
 - **Formato:** H.264 MP4, 1600×900, 20 fps, sem áudio. Inclui textos curtos em tela.
-- **Conteúdo:** problema urbano, proposta CitizenTech, gravação da interface em uso, preenchimento do formulário, análise assistida, revisão humana, comprovante local, painel Plotly, ODS, arquitetura, resultados de testes e melhoria da experiência baseada no feedback de uma participante.
+- **Conteúdo:** problema urbano, proposta CitizenTech, gravação real da aplicação, formulário, análise assistida em modo demo, revisão humana, comprovante local, painel Plotly, cenário de erro controlado (API indisponível), ODS, arquitetura, **trechos reais do código de integração LLM, estado, cache, configuração Docker**, testes e melhoria de UX motivada por feedback externo.
 - **Transparência:** a gravação do fluxo utiliza `LLM_PROVIDER=demo` (regras locais); as três inferências reais já executadas com OpenAI foram verificadas separadamente em 09/11/2026. Nenhuma chamada paga ocorreu na produção deste vídeo.
-- **Reprodução:** `scripts/gravar_demo_video.py`, `scripts/gravar_painel_ods_video.py` (recuperação parcial) e `scripts/editar_video_gs.py`. São ferramentas de gravação/edição; não alteram o comportamento da aplicação.
-- **Publicação:** o MP4 está disponível neste repositório público. Ainda não foi enviado ao YouTube; confirme se o professor exige link externo ou apresentação com narração dos integrantes.
+- **Reprodução:** `scripts/gravar_demo_video.py`, `scripts/gravar_painel_ods_video.py` (recuperação parcial), `scripts/gravar_erro_video.py` (instância isolada com API inativa) e **`scripts/editar_video_gs_final.py`** (edição final de 18 capítulos). O antigo `scripts/editar_video_gs.py` contém funções reutilizadas pela edição final. Essas ferramentas não alteram o comportamento da aplicação.
+- **Publicação:** o MP4 está disponível neste repositório público. O enunciado de Front-end 2026/2 **permite hospedagem no YouTube não listado ou arquivo no próprio GitHub**. Não há exigência expressa de áudio, mas o vídeo deve explicar os critérios por textos/legendas. Enviar o link do repositório e o link do vídeo no Portal do Aluno.
