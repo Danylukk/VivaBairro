@@ -400,4 +400,4 @@ Os três cenários representam **personas fictícias**, não entrevistas nem tes
 
 **Evidências:** `docs/evidencias/feedback_usabilidade_20261113/` com capturas da revisão **antes** e **depois** em desktop e celular e da área adicional aberta. Verificação reexecutável: `python -m scripts.validar_densidade_revisao --fase depois`, com API local em modo `demo`. Foram aprovados **48 testes pytest**, os três cenários E2E do fluxo e os três testes de contraste; não houve novas chamadas à OpenAI.
 
-**Acompanhamento:** a melhora visual e a preservação das funcionalidades foram verificadas tecnicamente, **mas ainda não houve uma nova avaliação humana da interface simplificada**. São necessárias mais duas avaliações de usuários externos para chegar aos três participantes da rubrica.
+**Reavaliação qualitativa:** a mesma participante externa gostou da versão revisada e relatou **maior clareza da tela**, sem excesso de informações pouco relevantes ao usuário. É um retorno humano específico sobre a melhoria, não um novo teste completo das tarefas. São necessárias mais duas avaliações de usuários externos para alcançar os três participantes da rubrica.

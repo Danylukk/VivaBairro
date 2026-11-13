@@ -44,7 +44,7 @@ Este documento mantém o protocolo para três participantes externos e registra 
 - Verificação reexecutável: `python -m scripts.validar_densidade_revisao --fase depois` (requer front-end e API em modo demonstração).
 - Resultados estruturados nos arquivos `resultados.json` de cada fase.
 
-**Limitação da revalidação:** o script comprova comportamento técnico, preservação de avisos e responsividade, mas **ainda não foi realizado um novo teste humano da versão simplificada** para verificar se a mudança reduziu a dificuldade percebida por Soraya.
+**Reavaliação humana da melhoria (relato recebido em 13/11/2026):** após visualizar a versão simplificada, a mesma participante P1 **gostou do que foi alterado**, considerou que a tela ficou **mais clara** e que informações não relevantes para os usuários deixaram de competir pela atenção. A avaliação foi transmitida pelo aluno; trata-se de **feedback qualitativo sobre a mudança visual**, não de um novo teste completo cronometrado de todas as tarefas. A validação técnica também confirmou preservação dos alertas, controles de revisão e responsividade em desktop/celular.
 
 ## Roteiro para os próximos participantes (10–15 minutos)
 
