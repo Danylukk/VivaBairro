@@ -1,0 +1,22 @@
+{
+  "metodo": "Testes automatizados usando personas ficticias, sem participantes reais",
+  "fase": "depois",
+  "cenarios": [
+    {
+      "cenario": "01_acessibilidade",
+      "bairro_se_recusado": false,
+      "recibo_local": true,
+      "aviso_nao_e_protocolo": true
+    },
+    {
+      "cenario": "02_mobile",
+      "painel_plotly": true,
+      "sem_overflow": true
+    },
+    {
+      "cenario": "03_revisao",
+      "resumo_editado_preservado": true,
+      "painel_plotly": true
+    }
+  ]
+}

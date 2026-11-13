@@ -26,6 +26,8 @@ def renderizar() -> None:
     if st.session_state.get("ultimo_registro"):
         rec = st.session_state["ultimo_registro"]
         st.success(f"✅ **Registro local concluído com sucesso!** Código local gerado: `{rec['id']}`")
+        st.info("ℹ️ **Este código é somente um comprovante temporário do VivaBairro.** "
+                "**Não é protocolo oficial da Prefeitura.** Para solicitar atendimento real, utilize o SP156.")
         with st.container(border=True):
             col_a, col_b = st.columns([2, 1])
             with col_a:
@@ -134,7 +136,9 @@ def renderizar() -> None:
                 help="Esse retorno ajuda a avaliar a clareza da proposta."
             )
 
-            st.caption("🔒 Ao confirmar, o relato será salvo exclusivamente na memória desta sessão do navegador.")
+            st.info("ℹ️ **Antes de confirmar:** você está registrando apenas nesta sessão de demonstração. "
+                    "O VivaBairro não envia solicitações à Prefeitura nem gera protocolo oficial.")
+            st.caption("🔒 Seus dados e correções serão mantidos somente na memória desta sessão do navegador.")
             confirmar = st.form_submit_button("✅ Confirmar e Registrar nesta Sessão", type="primary", use_container_width=True)
 
         if confirmar:
@@ -179,7 +183,7 @@ def renderizar() -> None:
                     "Bairro ou região (obrigatório)",
                     max_chars=60,
                     placeholder="Ex.: Lapa, Pinheiros, Centro...",
-                    help="Informe apenas o nome do bairro ou praça conhecida."
+                    help="Informe o bairro ou região (pode ter apenas duas letras, como Sé). Não inclua endereço residencial."
                 )
             with col2:
                 categoria = st.selectbox(
@@ -209,8 +213,8 @@ def renderizar() -> None:
         if enviar:
             bairro_limpo = bairro.strip()
             desc_limpa = descricao.strip()
-            if len(bairro_limpo) < 3:
-                st.warning("⚠️ O campo 'Bairro' deve ter pelo menos 3 caracteres.")
+            if len(bairro_limpo) < 2:
+                st.warning("⚠️ Informe o nome do bairro com pelo menos 2 caracteres (ex.: Sé).")
             elif not (30 <= len(desc_limpa) <= 900):
                 st.warning(f"⚠️ A descrição deve ter entre 30 e 900 caracteres. Seu texto tem {len(desc_limpa)} caracteres.")
             else:

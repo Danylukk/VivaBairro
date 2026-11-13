@@ -9,7 +9,7 @@
 
 A suíte completa de testes automatizados e validações end-to-end foi executada com **100% de sucesso**.
 
-- **Testes Automatizados (Pytest):** **47 testes aprovados** (0 falhas, 0 warnings de bloqueio) em ~3.9 segundos.
+- **Testes Automatizados (Pytest):** **48 testes aprovados** (0 falhas, 0 warnings de bloqueio) em ~3.9 segundos.
 - **Validação de Interface Nativa (Streamlit AppTest):** Inicialização, renderização de formulários e navegação entre abas validadas programaticamente.
 - **Validação E2E no Navegador Real (Playwright):** Simulação completa da jornada do cidadão em três resoluções de tela distintas, com geração de 7 capturas de tela em alta resolução.
 - **Auditoria de Código e Compilação:** `python -m compileall -q backend frontend tests scripts` executado sem qualquer erro sintático.
@@ -113,7 +113,7 @@ As capturas de tela foram geradas automaticamente pelo script `scripts/run_e2e_e
 ## 5. Checklist Manual para o Aluno Antes da Submissão Final
 
 - [x] Arquitetura em camadas conferida e separada sem chamadas diretas de IA pelo front-end.
-- [x] 47 testes automatizados executando e passando localmente.
+- [x] 48 testes automatizados executando e passando localmente.
 - [x] Correção dos ícones de texto (`keyboard_double_arrow_right`, etc.) e preservação estrita de fontes Material Symbols.
 - [x] Correção de sobreposição no controle expander ("Ver relato original enviado").
 - [x] Remoção de instruções técnicas (`.env`, `LLM_PROVIDER=openai`) das telas públicas voltadas ao cidadão.
@@ -139,3 +139,15 @@ As capturas de tela foram geradas automaticamente pelo script `scripts/run_e2e_e
 **Regressão:** 47 testes pytest passaram; o fluxo Playwright Docker passou (formulário, API, revisão humana, recibo, painel Plotly, mobile). Os contêineres continuaram em modo de demonstração, sem chamadas novas à OpenAI.
 
 **Integridade acadêmica:** esta correção foi motivada pela captura enviada pelo aluno. Não representa a melhoria obrigatória a ser realizada com base no feedback dos três participantes reais, que permanece pendente.
+
+---
+
+## Reavaliação de usabilidade técnica — 13/11/2026
+
+Relatório completo: [`relatorio_usabilidade_simulada_20261113.md`](relatorio_usabilidade_simulada_20261113.md).
+
+Foram executadas três jornadas automatizadas com personas fictícias em navegador (nenhum participante humano). A primeira detectou rejeição indevida do bairro **Sé**; o schema Pydantic e a validação da interface foram corrigidos para aceitar nomes com dois caracteres. A interface também ganhou aviso explícito de que o recibo local não é protocolo oficial, próximo da confirmação e do próprio recibo.
+
+**Evidências:** `docs/evidencias/usabilidade_simulada/antes` e `depois` (capturas e arquivos JSON). O bairro Sé foi rejeitado antes e aceito depois; os cenários mobile e revisão humana passaram nas duas fases. Nova regressão local: **48 testes pytest aprovados**; os três testes visuais de contraste passaram. O Docker não foi reexecutado nesta data porque o daemon estava indisponível; os testes E2E ocorreram com FastAPI/Streamlit locais em modo demo.
+
+**Limitação:** a execução por cenários não substitui os três participantes reais exigidos pelo professor. Não atribuir dificuldades, feedback ou entrevistas a pessoas inexistentes.

@@ -47,6 +47,13 @@ def test_exige_bairro(client):
     assert r.status_code == 422
 
 
+def test_aceita_bairro_de_dois_caracteres(client):
+    """Sé é um bairro real de São Paulo e não deve ser rejeitado pelo comprimento."""
+    r = client.post("/api/v1/analises", json={**VALIDO, "bairro": "Sé"})
+    assert r.status_code == 200
+    assert r.json()["modo"] == "demonstracao"
+
+
 def test_rejeita_categoria_desconhecida(client):
     r = client.post("/api/v1/analises", json={**VALIDO, "categoria_informada": "Doação"})
     assert r.status_code == 422

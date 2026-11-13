@@ -14,7 +14,7 @@ PRIORIDADES = ["alta", "media", "baixa"]
 
 class RelatoEntrada(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
-    bairro: str = Field(min_length=3, max_length=60)
+    bairro: str = Field(min_length=2, max_length=60)
     categoria_informada: Categoria
     descricao: str = Field(min_length=30, max_length=900)
 

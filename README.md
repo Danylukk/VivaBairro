@@ -111,7 +111,7 @@ VivaBairro_GS2026_2/
 │   ├── demo_data.py                # Dados sintéticos de exemplo claramente rotulados
 │   ├── Dockerfile                  # Container front-end otimizado (Streamlit)
 │   └── requirements.txt            # Dependências: streamlit, pandas, plotly, httpx
-├── tests/                          # Suite de 47 testes automatizados (Pytest)
+├── tests/                          # Suite de 48 testes automatizados (Pytest)
 │   ├── test_api.py                 # Testes de endpoints, contratos, CORS e segurança (20 testes)
 │   ├── test_provider.py            # Testes do provedor LLM, limpeza de JSON e timeouts (7 testes)
 │   ├── test_visualizacao.py        # Testes de gráficos Plotly e múltiplos filtros (12 testes)
@@ -249,9 +249,9 @@ CORS_ORIGINS=http://localhost:8501,http://127.0.0.1:8501
 
 ---
 
-## 7. Suite de Testes Automatizados (47 Testes com Pytest)
+## 7. Suite de Testes Automatizados (48 Testes com Pytest)
 
-A robustez da solução é comprovada por uma suite com **47 testes automatizados**, cobrindo todas as camadas do sistema:
+A robustez da solução é comprovada por uma suite com **48 testes automatizados**, cobrindo todas as camadas do sistema:
 
 ```bash
 python -m pytest -v
@@ -260,12 +260,13 @@ python -m pytest -v
 ### Distribuição dos Testes:
 | Módulo de Teste | Quantidade | Escopo e Cenários Validados |
 |---|:---:|---|
-| `tests/test_api.py` | 20 | Health check, validação Pydantic de entrada/saída, CORS restritivo, tratamento amigável de erros, resiliência contra Prompt Injection, higienização de tags XSS/HTML, rejeição de caracteres de controle ASCII e mock de provedor LLM. |
+| `tests/test_api.py` | 21 | Health check, validação Pydantic de entrada/saída, CORS restritivo, tratamento amigável de erros, resiliência contra Prompt Injection, higienização de tags XSS/HTML, rejeição de caracteres de controle ASCII e mock de provedor LLM. |
 | `tests/test_provider.py` | 7 | Limpeza de markdown code fences (````json````), parsing Pydantic estrito, suporte a base URL customizada, conversão segura de timeouts, tratamento de escolhas vazias e falhas de esquema. |
 | `tests/test_visualizacao.py` | 12 | Transformação de dados para Plotly, geração do gráfico de barras horizontais de categorias, gráfico de prioridades com percentuais e hover, filtros combinados (categoria + prioridade + origem) e tratamento gracioso de estados vazios. |
 | `tests/test_frontend_state.py` | 3 | Inicialização isolada do `st.session_state`, geração de identificadores `LOCAL-XXXXXXXX`, rastreamento de edições humanas (Human-in-the-Loop) e registro de avaliações de satisfação da IA. |
 | `tests/test_frontend_apptest.py` | 3 | Testes funcionais nativos com `streamlit.testing.v1.AppTest`, verificando a renderização dos formulários, navegação multipágina e ausência de exceções durante o ciclo de vida. |
-| **Total** | **45** | **100% de aprovação (tempo de execução: ~2.9 segundos)** |
+| `tests/test_tema.py` | 2 | Regressão de configuração de cores no Streamlit e alinhamento entre Docker e execução local. |
+| **Total** | **48** | **100% de aprovação (48 testes em 3,95 s na verificação de 13/11/2026)** |
 
 ---
 
@@ -317,7 +318,7 @@ A interface foi projetada e inspecionada segundo as diretrizes de acessibilidade
 A documentação do projeto inclui protocolos prontos para aplicação de testes reais:
 
 - **Casos de Teste Estruturados de IA ([docs/casos_teste_ia.md](docs/casos_teste_ia.md)):** Três cenários delimitados (calçada inacessível com foco em mobilidade, iluminação pública deficiente e tentativa deliberada de prompt injection), detalhando entrada, saída esperada, critérios de sucesso e instruções passo a passo para execução com a chave da OpenAI.
-- **Protocolo de Validação com Usuários ([docs/validacao_usuarios.md](docs/validacao_usuarios.md)):** Roteiro estruturado para teste com 3 pessoas de perfis diversos (idoso com menor letramento digital, jovem universitário e pessoa com mobilidade reduzida/baixa visão), contendo matriz de observações e rastreabilidade de melhorias de interface implementadas a partir de feedbacks.
+- **Protocolo de Validação com Usuários ([docs/validacao_usuarios.md](docs/validacao_usuarios.md)):** Roteiro estruturado para teste com 3 pessoas de perfis diversos (idoso com menor letramento digital, jovem universitário e pessoa com mobilidade reduzida/baixa visão), contendo matriz para observações e rastreabilidade de futuras melhorias implementadas a partir de feedbacks reais.
 - **Roteiro de Gravação de Vídeo ([docs/roteiro_video.md](docs/roteiro_video.md)):** Script completo cronometrado para gravação de vídeo demonstrativo de 4 minutos e 30 segundos, contemplando apresentação do problema, fluxo ao vivo, Human-in-the-Loop, painel Plotly, código da arquitetura e reflexão ética sobre ODS.
 
 ---
@@ -330,9 +331,9 @@ A tabela a seguir correlaciona os critérios oficiais do barema da Global Soluti
 |---|:---:|---|---|
 | **1. Fluxo CitizenTech e Integração com IA** | 2,0 | **Aprovado em código:** Pipeline completo funcional, validação Pydantic estrita, tratamento de code fences, resiliência a Prompt Injection e fallback determinístico auditado. | **Concluído em 09/11/2026:** três saídas reais de `gpt-4o-mini` documentadas no [relatório de validação do LLM](docs/relatorio_validacao_llm_real_20261109.md). |
 | **2. Arquitetura e Estrutura de Código** | 2,0 | **Aprovado em código:** Separação estrita em camadas (`features/`, `ui/`, `state/`, `providers/` no front; `routers/`, `schemas/`, `pipelines/`, `providers/` no back). Componentes reutilizados e sem chamadas diretas de IA no front. | Nenhuma pendência em código. |
-| **3. Estado, Performance e Robustez** | 1,5 | **Aprovado em código:** Gerenciamento de `st.session_state` estável contra reruns, 47 testes automatizados aprovados no Pytest, CORS restritivo e sem cache compartilhado de dados de munícipes. | Nenhuma pendência em código. |
+| **3. Estado, Performance e Robustez** | 1,5 | **Aprovado em código:** Gerenciamento de `st.session_state` estável contra reruns, 48 testes automatizados aprovados no Pytest, CORS restritivo e sem cache compartilhado de dados de munícipes. | Nenhuma pendência em código. |
 | **4. UX/UI, Acessibilidade e Visualização** | 2,0 | **Aprovado em código:** Diretrizes WCAG 2.2 AA (tríade semântica, contraste alto, foco por teclado), ícones Material Symbols intactos, sem transbordamento horizontal (390px validado) e 3 filtros combináveis em gráficos Plotly. | Nenhuma pendência em código. |
-| **5. Deploy e Repositório** | 1,0 | **Estruturado:** Multi-container `docker-compose.yml`, Dockerfiles otimizados, `.env.example` e `.gitignore` blindados contra chaves. | Docker executado e testado anteriormente no ambiente WSL2; **a publicação em repositório público GitHub continua pendente**. |
+| **5. Deploy e Repositório** | 1,0 | **Implementado:** Docker Compose com execução E2E comprovada anteriormente; `.env` protegido pelo `.gitignore`. | **Repositório público publicado:** https://github.com/Danylukk/VivaBairro. |
 | **6. Justificativa, Validação e Impacto Social** | 1,5 | **Estruturado:** Fundamentação em dados do SP156, metas ODS 11.7 e 16.6, abas de transparência ética e roteiros padronizados de teste preparados. | Conduzir entrevistas com 3 participantes reais conforme `docs/validacao_usuarios.md` e gravar o vídeo de 4m30s seguindo `docs/roteiro_video.md`. |
 
 ---
@@ -359,7 +360,7 @@ python -m scripts.validar_llm_real --executar
 
 A ferramenta gera `docs/evidencias/llm_real_*.json` com os três casos fictícios e as respostas efetivas, se a API funcionar. **Esses arquivos só podem ser chamados de evidência de LLM real quando `modo_retornado=llm` e a execução for bem-sucedida.** A revisão da qualidade e os ajustes permanecem humanos. A chave nunca é gravada pelo script. O modo demo não atende sozinho ao requisito de LLM real.
 
-**Atualização 09/11/2026:** chave local configurada com segurança e **três chamadas reais ao LLM concluídas**, documentadas no [relatório da IA](docs/relatorio_validacao_llm_real_20261109.md). Ainda faltam validação com três participantes reais, melhoria baseada no feedback, GitHub público e vídeo. Não declarar nota máxima antecipadamente.
+**Atualização 13/11/2026:** três chamadas reais ao LLM documentadas no [relatório da IA](docs/relatorio_validacao_llm_real_20261109.md), GitHub público publicado e [avaliação técnica simulada de usabilidade](docs/relatorio_usabilidade_simulada_20261113.md) realizada. **Ainda faltam validação com três participantes reais, melhoria originada de feedback humano e vídeo final.** Não declarar nota máxima antecipadamente.
 
 ---
 
@@ -376,3 +377,15 @@ A ferramenta gera `docs/evidencias/llm_real_*.json` com os três casos fictício
 **Regressão:** 47 testes pytest passaram; o fluxo Playwright Docker passou (formulário, API, revisão humana, recibo, painel Plotly, mobile). Os contêineres continuaram em modo de demonstração, sem chamadas novas à OpenAI.
 
 **Integridade acadêmica:** esta correção foi motivada pela captura enviada pelo aluno. Não representa a melhoria obrigatória a ser realizada com base no feedback dos três participantes reais, que permanece pendente.
+
+---
+
+## Avaliação por cenários simulados de usabilidade — 13/11/2026
+
+Foi realizada uma [avaliação técnica de usabilidade por três cenários simulados](docs/relatorio_usabilidade_simulada_20261113.md), com evidências reais de navegação em desktop e celular e comparativo antes/depois em `docs/evidencias/usabilidade_simulada/`.
+
+**Correções comprovadas:** o bairro real **Sé** agora é aceito (mínimo de dois caracteres no front-end e no schema Pydantic); um aviso junto ao recibo esclarece que o identificador local **não é protocolo oficial da Prefeitura**. O formulário, a revisão da prioridade, o recibo, o painel com Plotly e o mobile passaram novamente no navegador.
+
+**Verificação técnica:** `python -m pytest -q` → **48 aprovados**. `python -m scripts.validar_tema_e2e --url http://127.0.0.1:18501` → três resoluções/temas aprovados. Durante a execução de 13/11, os servidores foram iniciados diretamente no Windows porque o Docker Desktop não estava ativo. **Nenhuma chamada adicional à OpenAI foi realizada**.
+
+Os três cenários representam **personas fictícias**, não entrevistas nem testes com cidadãos reais. O requisito acadêmico de três participantes e uma melhoria motivada pelo feedback real **permanece pendente**.
