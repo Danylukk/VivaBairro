@@ -318,7 +318,7 @@ A interface foi projetada e inspecionada segundo as diretrizes de acessibilidade
 A documentação do projeto inclui protocolos prontos para aplicação de testes reais:
 
 - **Casos de Teste Estruturados de IA ([docs/casos_teste_ia.md](docs/casos_teste_ia.md)):** Três cenários delimitados (calçada inacessível com foco em mobilidade, iluminação pública deficiente e tentativa deliberada de prompt injection), detalhando entrada, saída esperada, critérios de sucesso e instruções passo a passo para execução com a chave da OpenAI.
-- **Protocolo de Validação com Usuários ([docs/validacao_usuarios.md](docs/validacao_usuarios.md)):** Roteiro estruturado para teste com 3 pessoas de perfis diversos (idoso com menor letramento digital, jovem universitário e pessoa com mobilidade reduzida/baixa visão), contendo matriz para observações e rastreabilidade de futuras melhorias implementadas a partir de feedbacks reais.
+- **Validação com pessoas ([docs/validacao_usuarios.md](docs/validacao_usuarios.md)):** Roteiro para três participantes externos e registro de **um feedback externo recebido**, além da autoavaliação do integrante. A sugestão externa de reduzir o excesso de informação levou à simplificação da etapa de revisão, com capturas antes/depois e verificação técnica.
 - **Roteiro de Gravação de Vídeo ([docs/roteiro_video.md](docs/roteiro_video.md)):** Script completo cronometrado para gravação de vídeo demonstrativo de 4 minutos e 30 segundos, contemplando apresentação do problema, fluxo ao vivo, Human-in-the-Loop, painel Plotly, código da arquitetura e reflexão ética sobre ODS.
 
 ---
@@ -334,7 +334,7 @@ A tabela a seguir correlaciona os critérios oficiais do barema da Global Soluti
 | **3. Estado, Performance e Robustez** | 1,5 | **Aprovado em código:** Gerenciamento de `st.session_state` estável contra reruns, 48 testes automatizados aprovados no Pytest, CORS restritivo e sem cache compartilhado de dados de munícipes. | Nenhuma pendência em código. |
 | **4. UX/UI, Acessibilidade e Visualização** | 2,0 | **Aprovado em código:** Diretrizes WCAG 2.2 AA (tríade semântica, contraste alto, foco por teclado), ícones Material Symbols intactos, sem transbordamento horizontal (390px validado) e 3 filtros combináveis em gráficos Plotly. | Nenhuma pendência em código. |
 | **5. Deploy e Repositório** | 1,0 | **Implementado:** Docker Compose com execução E2E comprovada anteriormente; `.env` protegido pelo `.gitignore`. | **Repositório público publicado:** https://github.com/Danylukk/VivaBairro. |
-| **6. Justificativa, Validação e Impacto Social** | 1,5 | **Estruturado:** Fundamentação em dados do SP156, metas ODS 11.7 e 16.6, abas de transparência ética e roteiros padronizados de teste preparados. | Conduzir entrevistas com 3 participantes reais conforme `docs/validacao_usuarios.md` e gravar o vídeo de 4m30s seguindo `docs/roteiro_video.md`. |
+| **6. Justificativa, Validação e Impacto Social** | 1,5 | **Parcialmente validado com pessoas:** Fundamentação em ODS, um feedback externo relatado e melhoria implementada na revisão para reduzir informação na tela. A avaliação técnica e as capturas estão documentadas. | Realizar mais **2 avaliações externas**, reavaliar a interface simplificada com pessoas e gravar o vídeo conforme `docs/roteiro_video.md`. |
 
 ---
 *Projeto acadêmico desenvolvido para a Global Solution 2026.2 — FIAP.*
@@ -360,7 +360,7 @@ python -m scripts.validar_llm_real --executar
 
 A ferramenta gera `docs/evidencias/llm_real_*.json` com os três casos fictícios e as respostas efetivas, se a API funcionar. **Esses arquivos só podem ser chamados de evidência de LLM real quando `modo_retornado=llm` e a execução for bem-sucedida.** A revisão da qualidade e os ajustes permanecem humanos. A chave nunca é gravada pelo script. O modo demo não atende sozinho ao requisito de LLM real.
 
-**Atualização 13/11/2026:** três chamadas reais ao LLM documentadas no [relatório da IA](docs/relatorio_validacao_llm_real_20261109.md), GitHub público publicado e [avaliação técnica simulada de usabilidade](docs/relatorio_usabilidade_simulada_20261113.md) realizada. **Ainda faltam validação com três participantes reais, melhoria originada de feedback humano e vídeo final.** Não declarar nota máxima antecipadamente.
+**Atualização 13/11/2026:** três chamadas reais ao LLM documentadas no [relatório da IA](docs/relatorio_validacao_llm_real_20261109.md), GitHub público publicado, [avaliação técnica simulada](docs/relatorio_usabilidade_simulada_20261113.md) e [feedback externo real relatado pelo aluno](docs/validacao_usuarios.md) que motivou melhoria visual. **Faltam duas avaliações de pessoas externas, revalidação humana após a melhoria e vídeo final.** Não declarar nota máxima antecipadamente.
 
 ---
 
@@ -389,3 +389,15 @@ Foi realizada uma [avaliação técnica de usabilidade por três cenários simul
 **Verificação técnica:** `python -m pytest -q` → **48 aprovados**. `python -m scripts.validar_tema_e2e --url http://127.0.0.1:18501` → três resoluções/temas aprovados. Durante a execução de 13/11, os servidores foram iniciados diretamente no Windows porque o Docker Desktop não estava ativo. **Nenhuma chamada adicional à OpenAI foi realizada**.
 
 Os três cenários representam **personas fictícias**, não entrevistas nem testes com cidadãos reais. O requisito acadêmico de três participantes e uma melhoria motivada pelo feedback real **permanece pendente**.
+
+---
+
+## Melhoria de usabilidade a partir de feedback externo — 13/11/2026
+
+**Relato real recebido:** uma participante externa utilizou o VivaBairro e não relatou dificuldades para realizar seu uso, elogiando a proposta e o potencial da solução. Apontou, porém, que **a tela de revisão apresenta informações demais**. O relato foi transmitido pelo integrante da equipe; não se atribuem duração, tarefas específicas nem respostas não informadas. O registro anonimizado e a autoavaliação do integrante constam em [`docs/validacao_usuarios.md`](docs/validacao_usuarios.md).
+
+**Alteração implementada:** redução da quantidade de informações inicialmente visíveis em `frontend/features/relatar.py`. A prioridade, possíveis riscos, orientação principal e formulário de revisão continuam disponíveis; justificativa, tipo de serviço, resumo anterior e relato original foram agrupados em uma seção expansível. Avisos acadêmicos redundantes foram condensados **sem ocultar o caráter não oficial do registro**.
+
+**Evidências:** `docs/evidencias/feedback_usabilidade_20261113/` com capturas da revisão **antes** e **depois** em desktop e celular e da área adicional aberta. Verificação reexecutável: `python -m scripts.validar_densidade_revisao --fase depois`, com API local em modo `demo`. Foram aprovados **48 testes pytest**, os três cenários E2E do fluxo e os três testes de contraste; não houve novas chamadas à OpenAI.
+
+**Acompanhamento:** a melhora visual e a preservação das funcionalidades foram verificadas tecnicamente, **mas ainda não houve uma nova avaliação humana da interface simplificada**. São necessárias mais duas avaliações de usuários externos para chegar aos três participantes da rubrica.

@@ -18,7 +18,9 @@ def renderizar() -> None:
     if status.get("status") != "ok":
         st.warning("⚠️ **Aviso de Conexão:** O serviço de análise assistida está temporariamente indisponível. "
                    "Tente novamente em alguns instantes.")
-    elif status.get("modo") == "demonstracao":
+    elif (status.get("modo") == "demonstracao"
+          and not st.session_state.get("pendente")
+          and not st.session_state.get("ultimo_registro")):
         st.info("ℹ️ **Modo de Demonstração Acadêmica:** Esta análise prévia é uma simulação para fins de teste da interface "
                 "e não substitui o atendimento dos canais oficiais da Prefeitura.")
 
@@ -81,27 +83,23 @@ def renderizar() -> None:
             st.error("⚠️ **Atenção Imediata Identificada:** O relato indica possível risco à integridade física. "
                      "Não se coloque em perigo e, se necessário, procure os canais oficiais de socorro e emergência.")
 
-        with st.expander("Ver relato original enviado", expanded=False):
+        # Exibir apenas a ação principal; detalhes técnicos ficam disponíveis sob demanda.
+        # A prioridade e os avisos de risco permanecem visíveis mesmo com o expansor fechado.
+        with st.container(border=True):
+            st.markdown(f"**💡 Orientação preliminar:** {resultado['orientacao']}")
+
+        with st.expander("Ver justificativa e informações adicionais", expanded=False):
+            st.markdown(f"**Por que esta prioridade?** {resultado['justificativa']}")
+            st.markdown(f"**Serviço sugerido:** {resultado['encaminhamento']}")
+            st.markdown(f"**Resumo sugerido:** {resultado['resumo']}")
+            st.divider()
+            st.markdown("**Relato original**")
             st.markdown(f"**Bairro informado:** {entrada['bairro']}")
             st.markdown(f"**Categoria preliminar:** {entrada['categoria_informada']}")
             st.markdown(f"**Descrição original:** {entrada['descricao']}")
 
-        col_ia1, col_ia2 = st.columns(2)
-        with col_ia1:
-            with st.container(border=True):
-                st.markdown("##### 📌 Resumo e Justificativa")
-                st.write(f"**Resumo sugerido:** {resultado['resumo']}")
-                st.write(f"**Por que esta prioridade?** {resultado['justificativa']}")
-        with col_ia2:
-            with st.container(border=True):
-                st.markdown("##### 💡 Orientação e Encaminhamento Sugerido")
-                st.write(f"**Orientação ao cidadão:** {resultado['orientacao']}")
-                st.write(f"**Tipo genérico de serviço:** {resultado['encaminhamento']}")
-
-        st.divider()
         st.subheader("✍️ Sua Decisão Humana")
-        st.markdown("A sugestão apresentada serve apenas de apoio e pode conter imprecisões. "
-                    "Você tem total autonomia para corrigir as classificações antes de confirmar o registro.")
+        st.caption("Confira a sugestão. Se necessário, altere a categoria, a prioridade e o resumo antes de confirmar.")
 
         with st.form("form_revisao"):
             col_rev1, col_rev2 = st.columns(2)
@@ -136,9 +134,8 @@ def renderizar() -> None:
                 help="Esse retorno ajuda a avaliar a clareza da proposta."
             )
 
-            st.info("ℹ️ **Antes de confirmar:** você está registrando apenas nesta sessão de demonstração. "
-                    "O VivaBairro não envia solicitações à Prefeitura nem gera protocolo oficial.")
-            st.caption("🔒 Seus dados e correções serão mantidos somente na memória desta sessão do navegador.")
+            st.info("ℹ️ **Registro temporário:** salvo apenas nesta sessão; não é enviado à Prefeitura "
+                    "nem gera protocolo oficial.")
             confirmar = st.form_submit_button("✅ Confirmar e Registrar nesta Sessão", type="primary", use_container_width=True)
 
         if confirmar:
@@ -232,4 +229,6 @@ def renderizar() -> None:
                         st.session_state["pendente"] = {"entrada": entrada, "resposta": resposta}
                         st.rerun()
 
-    aviso_institucional()
+    # Na revisão o aviso oficial já aparece próximo ao botão; evitar repetição visual.
+    if not pendente:
+        aviso_institucional()

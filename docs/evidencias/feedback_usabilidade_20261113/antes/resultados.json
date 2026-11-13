@@ -1,0 +1,21 @@
+{
+  "metodo": "Navegador automatizado; nao sao respostas de participantes.",
+  "cenarios": [
+    {
+      "cenario": "desktop",
+      "antes": true,
+      "justificativa_visivel_por_padrao": true,
+      "controle_detalhes": false,
+      "aviso_risco_visivel": true,
+      "revisao_visivel": true
+    },
+    {
+      "cenario": "mobile",
+      "antes": true,
+      "justificativa_visivel_por_padrao": true,
+      "controle_detalhes": false,
+      "aviso_risco_visivel": true,
+      "revisao_visivel": true
+    }
+  ]
+}

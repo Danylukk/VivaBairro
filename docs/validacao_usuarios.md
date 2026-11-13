@@ -1,49 +1,57 @@
-# Validação de Usabilidade — Teste com 3 Participantes Reais
+# Validação de usabilidade — protocolo e feedbacks reais
 
-**Objetivo:** Avaliar a experiência real do cidadão comum na interação com a interface do VivaBairro, verificando clareza das instruções, facilidade no preenchimento, compreensão da sugestão de IA e eficácia do mecanismo de revisão humana (*Human-in-the-Loop*).
+**Projeto:** VivaBairro — Global Solution 2026.2
+**Atualização:** 13/11/2026
+**Objetivo:** observar facilidade de uso, compreensão da sugestão, clareza das informações, segurança da revisão humana e localização dos dados no painel.
 
-> **Aviso de Integridade Acadêmica:** Este protocolo está completamente preparado e estruturado para execução. Os testes devem ser realizados com 3 pessoas reais pelo aluno antes do envio final. Não devem ser inventados dados de entrevistados.
+## Metodologia e transparência
 
----
+Este documento mantém o protocolo para três participantes externos e registra **somente feedbacks efetivamente informados pelo aluno**. A avaliação por personas e Playwright está em [relatorio_usabilidade_simulada_20261113.md](relatorio_usabilidade_simulada_20261113.md) e **não conta como pesquisa com pessoas**.
 
-## 1. Regras e Cuidados Éticos na Condução (LGPD)
+- **Privacidade:** usar apenas identificadores P1, P2 e P3; não coletar CPF, telefone, endereço, fotos de rosto nem outros dados identificadores.
+- **Contexto:** esclarecer que o VivaBairro é um projeto acadêmico e não envia demandas à Prefeitura. Os relatos dos testes devem ser fictícios.
+- **Realização:** pedir que o participante descreva um problema, revise a análise e encontre o registro no painel; evitar orientá-lo sobre onde clicar, exceto quando necessário para destravar.
+- **Coleta:** registrar tarefas concluídas, dificuldades observadas, comentários espontâneos, recomendações, eventual intervenção do mediador e data.
 
-- **Participantes:** 3 pessoas adultas (P1, P2, P3) com diferentes graus de familiaridade com tecnologia (ex.: jovem conectado, usuário intermediário e pessoa idosa ou com menor fluência digital).
-- **Anonimização:** Jamais colete ou registre nome completo, CPF, telefone, e-mail, fotos de rosto ou endereço pessoal.
-- **Esclarecimento Prévio:** Explique ao participante que se trata de uma **Prova de Conceito (POC) acadêmica**, que o sistema **não tem conexão com a Prefeitura de São Paulo** e que os relatos informados devem ser **fictícios**.
+## Feedbacks recebidos
 
----
+| Identificador | Origem da avaliação | Resultado comunicado | Dificuldade ou sugestão |
+|---|---|---|---|
+| **A0 — Autoavaliação** | Integrante do grupo, informada por ele na conversa | Experiência fácil, boa, intuitiva e adequada ao próprio uso; nenhuma dificuldade relatada | Nenhuma sugestão reportada. **Autoavaliação não contabilizada como participante externo.** |
+| **P1 — Pessoa externa** | Feedback da participante transmitido pelo aluno em 13/11/2026 | Nenhuma dificuldade de utilização relatada; avaliou positivamente a ideia e o sistema funcionando; percebe potencial | **Excesso de informações na tela**, especialmente na etapa de revisão exibida nas capturas compartilhadas. Sugeriu simplificar a experiência. |
+| **P2** | Pendente | Sem resultado ainda | Não preenchido |
+| **P3** | Pendente | Sem resultado ainda | Não preenchido |
 
-## 2. Roteiro de Aplicação Padronizado (10 a 15 minutos por pessoa)
+**Limites dos dados:** não foram informados duração, idade, taxa de acerto, sequência completa de tarefas nem se P1 explorou todos os filtros do painel. Portanto, nenhuma dessas informações foi presumida. O relato sobre P1 é **indireto, fornecido pelo aluno**, e as capturas mostram a interface em revisão, não observações comportamentais de uma sessão gravada.
 
-Apresente a tela inicial (`http://localhost:8501`) sem instruções detalhadas e peça para o participante realizar as seguintes tarefas enquanto expressa seus pensamentos em voz alta (*Think-Aloud Protocol*):
+## Melhoria implementada a partir do feedback de P1
 
-1. **Reconhecimento Inicial (1 min):** Olhe para a tela inicial. Para que você acha que serve este sistema? O objetivo fica claro logo de início?
-2. **Registro de Relato (3 min):** Imagine que você encontrou um buraco perigoso ou uma calçada quebrada perto da praça do seu bairro. Preencha o formulário e solicite a análise de inteligência artificial.
-3. **Avaliação da Resposta da IA (3 min):** Veja a resposta que a IA gerou. A prioridade sugerida faz sentido para você? As cores e os ícones ajudam a entender a gravidade?
-4. **Revisão Humana e Confirmação (3 min):** Você concorda com o resumo ou quer ajustar a categoria/prioridade? Corrija algum campo se desejar, avalie se a sugestão foi adequada e confirme o relato. O aviso de que **não é um protocolo oficial da Prefeitura** ficou perceptível?
-5. **Exploração do Painel de Relatos (3 min):** Acesse o painel. Tente filtrar os relatos por categoria e por nível de prioridade. Você consegue ver o gráfico e entender a quantidade de relatos?
-6. **Pergunta de Fechamento (2 min):** O que você achou mais confuso ou difícil? Se pudesse mudar algo nesta tela para torná-la mais simples para qualquer morador, o que mudaria?
+**Problema apontado:** grande volume de textos, avisos e cartões no mesmo momento da revisão humana; isso aumenta a carga de leitura para quem está apenas tentando conferir o resultado e continuar.
 
----
+**Solução implementada em `frontend/features/relatar.py`:**
 
-## 3. Matriz de Registro das Observações
+1. A etapa de revisão apresenta prioritariamente **classificação, risco, orientação essencial e os controles para corrigir e confirmar**.
+2. A justificativa, encaminhamento, resumo anterior e relato original passaram a ficar sob **“Ver justificativa e informações adicionais”**, acessíveis por expansão voluntária.
+3. O aviso longo de modo de demonstração não é repetido na revisão, que já se identifica como demonstração; a mensagem de escopo oficial próxima da confirmação foi abreviada.
+4. O aviso institucional redundante no rodapé da revisão foi retirado, mas a advertência de que o envio **não gera protocolo da Prefeitura** permanece ao lado da confirmação.
+5. **Alertas de prioridade e de possível risco à integridade física permanecem visíveis**, independentemente da expansão dos detalhes. A decisão humana, correção de categoria/prioridade e resumo continuam disponíveis.
 
-*(Preencher após a condução das 3 sessões)*
+**Evidências de código e navegador:**
 
-| ID | Perfil do Participante (idade aproximada e fluência digital) | Tarefa Concluída com Sucesso? | Principal Dificuldade Observada | Feedback ou Sugestão Espontânea | Evidência (Anotação / Registro) |
-|---|---|---|---|---|---|
-| **P1** | *Ex.: 24 anos, estudante universitário, alta familiaridade digital* | *(Sim / Parcial / Não)* | *(Registrar se houve hesitação ao enviar ou entender os botões)* | *(Sugestão de melhoria dada pelo participante)* | *Sessão realizada em DD/MM/AAAA* |
-| **P2** | *Ex.: 48 anos, comerciante de bairro, uso habitual apenas de WhatsApp* | *(Sim / Parcial / Não)* | *(Registrar se a linguagem técnica ou termos do formulário causaram dúvida)* | *(Sugestão de melhoria dada pelo participante)* | *Sessão realizada em DD/MM/AAAA* |
-| **P3** | *Ex.: 67 anos, aposentada, baixa familiaridade com computadores/desktop* | *(Sim / Parcial / Não)* | *(Registrar se a navegação por sidebar ou leitura dos gráficos gerou dificuldade)* | *(Sugestão de melhoria dada pelo participante)* | *Sessão realizada em DD/MM/AAAA* |
+- Capturas anteriores: `docs/evidencias/feedback_usabilidade_20261113/antes/desktop_revisao.png` e `mobile_revisao.png`.
+- Capturas após a alteração: `docs/evidencias/feedback_usabilidade_20261113/depois/desktop_revisao.png` e `mobile_revisao.png`.
+- Expansão dos detalhes: `docs/evidencias/feedback_usabilidade_20261113/depois/desktop_detalhes_expandidos.png` e `mobile_detalhes_expandidos.png`.
+- Verificação reexecutável: `python -m scripts.validar_densidade_revisao --fase depois` (requer front-end e API em modo demonstração).
+- Resultados estruturados nos arquivos `resultados.json` de cada fase.
 
----
+**Limitação da revalidação:** o script comprova comportamento técnico, preservação de avisos e responsividade, mas **ainda não foi realizado um novo teste humano da versão simplificada** para verificar se a mudança reduziu a dificuldade percebida por Soraya.
 
-## 4. Ajuste Decorrente do Feedback (Exigência Obrigatória)
+## Roteiro para os próximos participantes (10–15 minutos)
 
-O enunciado exige que pelo menos um ajuste real seja aplicado no código/interface com base nas dificuldades apontadas pelos participantes:
+1. Apresente o sistema, explicando que não é canal oficial.
+2. Peça que criem um relato fictício de problema urbano sem apontar os controles na tela.
+3. Peça que interpretem a prioridade e editem algum campo se julgarem necessário.
+4. Peça que confirmem e procurem o relato no painel.
+5. Pergunte: “O que foi mais fácil?”, “O que foi confuso?” e “O que você melhoraria?”
 
-- **Problema Observado:** *(Descrever a dificuldade real relatada pelos participantes durante o teste. Ex.: Usuário ficava em dúvida se o relato tinha sido salvo após clicar em confirmar, ou tinha dificuldade de voltar ao painel).*
-- **Alteração Aplicada no Código:** *(Citar o arquivo alterado e a modificação realizada. Ex.: Criação de tela dedicada de recibo em `frontend/features/relatar.py` com o código local destacado e botão direto 'Ver no Painel de Relatos').*
-- **Evidência do Antes e Depois:** *(Referenciar captura de tela demonstrando a tela antes e após o aprimoramento).*
-- **Como Foi Verificado que Melhorou:** *(Nova execução do fluxo comprovando menor atrito e maior clareza para o cidadão).*
+**Situação:** **uma avaliação externa reportada (P1)**; faltam **duas avaliações de pessoas externas (P2/P3)** para alcançar a meta de três. A autoavaliação do integrante está registrada à parte. Não há dados inventados.
