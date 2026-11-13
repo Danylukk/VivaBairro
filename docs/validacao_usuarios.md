@@ -19,7 +19,7 @@ Este documento mantém o protocolo para três participantes externos e registra 
 |---|---|---|---|
 | **A0 — Autoavaliação** | Integrante do grupo, informada por ele na conversa | Experiência fácil, boa, intuitiva e adequada ao próprio uso; nenhuma dificuldade relatada | Nenhuma sugestão reportada. **Autoavaliação não contabilizada como participante externo.** |
 | **P1 — Pessoa externa** | Feedback da participante transmitido pelo aluno em 13/11/2026 | Nenhuma dificuldade de utilização relatada; avaliou positivamente a ideia e o sistema funcionando; percebe potencial | **Excesso de informações na tela**, especialmente na etapa de revisão exibida nas capturas compartilhadas. Sugeriu simplificar a experiência. |
-| **P2** | Pendente | Sem resultado ainda | Não preenchido |
+| **P2 - Pessoa externa** | Feedback do participante transmitido pelo aluno em 13/11/2026 | Considerou que o projeto faz sentido e conseguiu utilizá-lo normalmente, sem dificuldades relatadas. | Nenhuma sugestão específica foi informada. |
 | **P3** | Pendente | Sem resultado ainda | Não preenchido |
 
 **Limites dos dados:** não foram informados duração, idade, taxa de acerto, sequência completa de tarefas nem se P1 explorou todos os filtros do painel. Portanto, nenhuma dessas informações foi presumida. O relato sobre P1 é **indireto, fornecido pelo aluno**, e as capturas mostram a interface em revisão, não observações comportamentais de uma sessão gravada.
@@ -54,4 +54,4 @@ Este documento mantém o protocolo para três participantes externos e registra 
 4. Peça que confirmem e procurem o relato no painel.
 5. Pergunte: “O que foi mais fácil?”, “O que foi confuso?” e “O que você melhoraria?”
 
-**Situação:** **uma avaliação externa reportada (P1)**; faltam **duas avaliações de pessoas externas (P2/P3)** para alcançar a meta de três. A autoavaliação do integrante está registrada à parte. Não há dados inventados.
+**Situação:** **duas avaliações externas reportadas (P1 e P2)**; falta **uma avaliação de pessoa externa (P3)** para alcançar a meta de três. A autoavaliação do integrante está registrada à parte. Não foram presumidas tarefas específicas, duração, perfil dos participantes ou sugestões não informadas.
